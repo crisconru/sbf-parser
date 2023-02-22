@@ -36,5 +36,8 @@
   "bugs": {
     "url": "https://github.com/crisconru/sbf-parser/issues"
   },
-  "homepage": "https://github.com/crisconru/sbf-parser#readme"
+  "homepage": "https://github.com/crisconru/sbf-parser#readme",
+  "dependencies": {
+    "crc": "^4.3.2"
+  }
 }
