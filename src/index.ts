@@ -1,18 +1,12 @@
-import { getSBFFrames } from "./frame"
-import { SBFFrame } from "./types"
+import { getFirmwares, isAvailableFirmware } from "./firmware"
+import { SBFParser } from "./firmware/types"
 
-const getBufferData = (data: any): Buffer => {
-  if (Buffer.isBuffer(data)) return data
-  if (typeof data === 'string') return Buffer.from(data, 'ascii')
-  try {
-    return Buffer.from(data)
-  } catch (error) {
-    console.error(error)
-    throw new Error('Input data should be binary or string ascii data')
-  }
-}
+const firmwares = getFirmwares()
 
-export const getFrames = (data: any): SBFFrame[] => {
-  const buffer = getBufferData(data)
-  return getSBFFrames(buffer)
+export const availableFirmwares = () => firmwares
+
+export const getSBFParser = (firmware: any): SBFParser => {
+  const error = `firmware must be one of these strings -> ${firmwares}`
+  if (!isAvailableFirmware(firmware)) throw new Error(error)
+  return getSBFParser(firmware as string)
 }
