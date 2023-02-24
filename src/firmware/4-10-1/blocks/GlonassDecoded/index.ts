@@ -1,5 +1,7 @@
-import { SBFCommand } from '../../types'
+import { SBFBlock } from '../../types'
 
-const commands = new Map<number, SBFCommand>()
-
-export { commands }
+const blocks = new Map<number, SBFBlock>()
+// 4004 - GLONav
+// 4005 - GLOAlm
+// 4036 - GLOTime
+export { blocks }

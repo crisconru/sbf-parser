@@ -1,5 +1,8 @@
-import { SBFCommand } from '../../types'
+import { SBFBlock } from '../../types'
 
-const commands = new Map<number, SBFCommand>()
-
-export { commands }
+const blocks = new Map<number, SBFBlock>()
+// 5891 - GPSNav
+// 5892 - GPSAlm
+// 5893 - GPSIon
+// 5894 - GPSUtc
+export { blocks }

@@ -24,4 +24,4 @@ export interface SBFFrame {
   frame: string
 }
 
-export type SBFCommand = (body: Buffer, blockRevision?: number) => object
+export type SBFBlock = (body: Buffer, blockRevision?: number) => object

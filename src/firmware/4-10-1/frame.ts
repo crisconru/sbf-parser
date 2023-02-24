@@ -1,3 +1,4 @@
+import { getSBFBody } from './body'
 import { sbf } from './constants'
 import { computedCRC, getSBFHeader } from './header'
 import { getFrameSBFTimestamp } from './timestamp'
@@ -22,7 +23,7 @@ const getSBFFrame = (data: Buffer): SBFFrame | null => {
   // Parse Timestamp
   const timestamp = getFrameSBFTimestamp(frame)
   // TODO: Parse Body
-  const body = {}
+  const body = getSBFBody(frame, header.id.blockNumber, header.id.blockRevision)
   // Add frame
   return {
     header,

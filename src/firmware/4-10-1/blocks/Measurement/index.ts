@@ -1,14 +1,12 @@
-import { SBFCommand } from '../../types'
+import { SBFBlock } from '../../types'
 
-// MeasEpoch
-// MeasExtra
-// Meas3Ranges
-// Meas3Doppler
-// Meas3CN0HiRes
-// Meas3PP
-// Meas3MP
-// EndOfMeas
-
-const commands = new Map<number, SBFCommand>()
-
-export { commands }
+const blocks = new Map<number, SBFBlock>()
+// 4027 - MeasEpoch
+// 4000 - MeasExtra
+// 4109 - Meas3Ranges
+// 4110 - Meas3CN0HiRes
+// 4111 - Meas3Doppler
+// 4112 - Meas3PP
+// 4113 - Meas3MP
+// 5922 - EndOfMeas
+export { blocks }

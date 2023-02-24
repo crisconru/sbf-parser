@@ -4,17 +4,17 @@ import {
 import { SBFParser, SBFResponse } from "./types"
 import { getBufferData } from "./utils"
 // Add firmware
-const firmwareParser = new Map<string, SBFParser>()
-firmwareParser.set('4.10.1', getFrames4_10_1)
+const firmwareParsers = new Map<string, SBFParser>()
+firmwareParsers.set('4.10.1', getFrames4_10_1)
 
-const getFirmwares = () => firmwareParser.keys()
+const getFirmwares = () => firmwareParsers.keys()
 const isAvailableFirmware = (firmware: any): boolean => {
   if (typeof firmware !== 'string') return false
-  return firmwareParser.has(firmware)
+  return firmwareParsers.has(firmware)
 }
 // Return parser
-const getSBFParser = (firmware: string = '4.10.1'): SBFParser | null => {
-  const fn = firmwareParser.get(firmware)
+const getParser = (firmware: string = '4.10.1'): SBFParser | null => {
+  const fn = firmwareParsers.get(firmware)
 
   if (fn) {
     const parseData = (data: any): SBFResponse => {
@@ -28,8 +28,7 @@ const getSBFParser = (firmware: string = '4.10.1'): SBFParser | null => {
 }
 // Export
 export {
-  firmwareParser,
   getFirmwares,
   isAvailableFirmware,
-  getSBFParser
+  getParser
 }
