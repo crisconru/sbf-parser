@@ -22,7 +22,7 @@ const getSBFFrame = (data: Buffer): SBFFrame | null => {
   if (!isValidFrame(frame, header)) return null
   // Parse Timestamp
   const timestamp = getFrameSBFTimestamp(frame)
-  // TODO: Parse Body
+  // Parse Body
   const body = getSBFBody(frame, header.id.blockNumber, header.id.blockRevision)
   // Add frame
   return {
