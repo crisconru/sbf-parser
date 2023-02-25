@@ -17,11 +17,18 @@ export interface SBFTimeStamp {
 }
 
 export interface SBFFrame {
+  // Binary data
+  raw: Buffer,
+  // Meta data
+  frame: string,
+  number: number,
+  version: number,
+  // Frame Blocks
   header: SBFHeader,
-  timestamp: SBFTimeStamp
-  body: {}
-  raw: Buffer
-  frame: string
+  timestamp: SBFTimeStamp,
+  body: object,
 }
 
-export type SBFBlock = (body: Buffer, blockRevision?: number) => object
+export type BodyBlock = { name: string, body: object } | null
+
+export type SBFBlock = (body: Buffer, blockRevision?: number) => BodyBlock

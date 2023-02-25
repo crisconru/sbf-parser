@@ -14,7 +14,7 @@ const isValidFrame = (data: Buffer, header: SBFHeader): boolean => {
   return checkCRC(data, header.crc)
 }
 
-const getSBFFrame = (data: Buffer): SBFFrame | null => {
+export const getSBFFrame = (data: Buffer): SBFFrame | null => {
   // Parse Header
   const header = getSBFHeader(data)
   const frame = data.subarray(0, header.length)
@@ -23,34 +23,17 @@ const getSBFFrame = (data: Buffer): SBFFrame | null => {
   // Parse Timestamp
   const timestamp = getFrameSBFTimestamp(frame)
   // Parse Body
-  const body = getSBFBody(frame, header.id.blockNumber, header.id.blockRevision)
+  const bodyBlock = getSBFBody(frame, header.id.blockNumber, header.id.blockRevision)
+  if (bodyBlock === null) return null
+  const { name, body } = bodyBlock
   // Add frame
   return {
+    raw: frame,
+    frame: name,
+    number: header.id.blockNumber,
+    version: header.id.blockRevision,
     header,
     timestamp,
     body,
-    raw: frame,
-    frame: frame.toString('ascii')
   }
-} 
-
-export const getSBFFrames = (data: Buffer): SBFFrame[] => {
-  // Response
-  let sbfFrames: SBFFrame[] = []
-  // Auxiliary buffer
-  let buffer = data
-  // Routine
-  while (true) {
-    // Look for the first index
-    const index = buffer.indexOf(sbf.sync.byte)
-    if (index === -1) break
-    // Get SBF Frame
-    const sbfFrame = getSBFFrame(buffer.subarray(index))
-    if (sbfFrame !== null) {
-      sbfFrames.push(sbfFrame)
-    }
-    // Next iteration
-    buffer = buffer.subarray(index + 1)
-  }
-  return sbfFrames
 }
