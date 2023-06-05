@@ -1,28 +1,31 @@
-import { getSBFFrame } from "./frame"
-import { SBFFrame } from "./types"
+import { UNKNOWN_SBF_BODY_DATA } from "../../shared/constants"
+import { SBFBodyData, SBFBodyDataMap, SBFBodyDataParser } from "../../shared/types"
+import { blocks as GNSSAttitude } from "./GNSSAttitude"
+import { blocks as ReceiverTime } from "./ReceiverTime"
+// Blocks
+// Measurement
+// Navigation
+// GPS Decoded
+// GLONASS Decoded
+// Galileo Decoded
+// BeiDou Decoded
+// QZSS Decoded
+// SBAS L1 Decoded
+// Position, Velocity and Time
+// GNSS Attitude
+// Receiver Time
+// External Event
+// Differential Correction
+// L-Band Modulator
+// Status
+// Miscellaneous
+const blocks: SBFBodyDataMap = new Map([
+  ...GNSSAttitude,
+  ...ReceiverTime,
+])
 
-const getSBFFrames = (data: Buffer): SBFFrame[] => {
-  // Response
-  let sbfFrames: SBFFrame[] = []
-  // Auxiliary buffer
-  let buffer = data
-  // Routine
-  while (true) {
-    // Look for the first index
-    const index = buffer.indexOf(sbf.sync.byte)
-    if (index === -1) break
-    // Get SBF Frame
-    const sbfFrame = getSBFFrame(buffer.subarray(index))
-    if (sbfFrame !== null) {
-      sbfFrames.push(sbfFrame)
-    }
-    // Next iteration
-    buffer = buffer.subarray(index + 1)
-  }
-  return sbfFrames
-}
-
-export {
-  SBFFrame,
-  getSBFFrames
+export const getSBFFrame: SBFBodyDataParser = (blockNumber: number, blockRevision: number, data: Buffer): SBFBodyData => {
+  const parser = blocks.get(blockNumber)
+  if (parser) return parser(blockRevision, data)
+  return UNKNOWN_SBF_BODY_DATA
 }

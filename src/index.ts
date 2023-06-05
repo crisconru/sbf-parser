@@ -1,6 +1,7 @@
-import { getFirmwares, getSBFParser } from "./firmware"
+import { getFirmwares } from "./firmware"
+import { Parser } from "./parser"
 
 export {
   getFirmwares as availableFirmwares,
-  getSBFParser as getParser
+  Parser as SBFParser
 }

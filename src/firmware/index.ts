@@ -1,35 +1,34 @@
-import { getSBFFrames as getSBFFrames4_10_1 } from "./4-10-1"
-import { Parser, SBFParser, SBFResponse } from "./types"
-import { getBufferData } from "./utils"
+import { SBFBodyDataParser } from "../shared/types"
+import { getSBFFrame as getSBFFrame_4_10_1 } from "./4-10-1"
 
-const firmwareParsers = new Map<string, SBFParser>()
-// Add Firmwares
-firmwareParsers.set('4.10.1', getSBFFrames4_10_1)
 // Firmwares
-const getFirmwares = () => firmwareParsers.keys()
+const firmwareParsers = new Map<string, SBFBodyDataParser>()
+// Add Firmwares
+firmwareParsers.set('4.10.1', getSBFFrame_4_10_1)
 
-const isAvailableFirmware = (firmware: any): boolean => {
-  if (typeof firmware !== 'string') return false
-  return firmwareParsers.has(firmware)
+
+const getFirmwares = () => Array.from(firmwareParsers.keys())
+
+const getFirmareParser = (firmare: string): SBFBodyDataParser => {
+  const parser = firmwareParsers.get(firmare)
+  if (!parser) throwFirmwareError(firmare)
+  return parser as SBFBodyDataParser
 }
 
-const throwFirmwareError = () => {
+const isAvailableFirmware = (firmware: any): boolean => firmwareParsers.has(firmware)
+
+const throwFirmwareError = (fw: string): never => {
+  // const fmws = new Intl.ListFormat('en', { type: 'unit' }).format(getFirmwares())
   const fmws = Array.from(getFirmwares()).join(', ')
-  const error = `Supported firmwares are -> ${fmws}`
+  const error = `Supported firmwares are -> ${fmws} not ${fw}`
   throw new Error(error)
 }
-// Parsers
-const getSBFParser = (firmware: any): Parser => {
-  if (!isAvailableFirmware(firmware)) throwFirmwareError()
-  const fn = firmwareParsers.get(firmware) as SBFParser
-  const parseData: Parser = (data: any): SBFResponse => {
-    const buffer = getBufferData(data)
-    return fn(buffer)
-  }
-  return parseData
-}
+
+
 // Export
 export {
   getFirmwares,
-  getSBFParser,
+  getFirmareParser,
+  isAvailableFirmware,
+  throwFirmwareError
 }
