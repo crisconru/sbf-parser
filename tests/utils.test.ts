@@ -23,14 +23,15 @@ describe('Test typed data', () => {
       const { number, buffer } = data
       expect(number).toBe(buffer.readInt32LE())
     }
+    // expect(data).toBe(null)
   })
   test('int64', () => {
     const data = getTypedData(num, TypeData.INT64)
-    // if (data !== null) {
-    //   const { number, buffer } = data
-    //   expect(number).toBe(buffer.readBigInt64LE())
-    // }
-    expect(data).toBe(null)
+    if (data !== null) {
+      const { number, buffer } = data
+      expect(number).toBe(buffer.readBigInt64LE())
+    }
+    // expect(data).toBe(null)
   })
   test('uint8', () => {
     const data = getTypedData(num, TypeData.UINT8)
@@ -52,6 +53,7 @@ describe('Test typed data', () => {
       const { number, buffer } = data
       expect(number).toBe(buffer.readUInt32LE())
     }
+    // expect(data).toBe(null)
   })
   test('uint64', () => {
     const data = getTypedData(num, TypeData.UINT64)
