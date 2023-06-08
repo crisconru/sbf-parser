@@ -65,7 +65,7 @@ const COV_PITCH_ROLL_LENGTH = FLOAT
 
 const PADDING_INDEX = COV_PITCH_ROLL_INDEX + COV_PITCH_ROLL_LENGTH
 
-enum ErrorCode {
+export enum ErrorCode {
   NO = 'NO_ERROR',
   MEASUREMENTS = 'NOT_ENOUGH_MEASUREMENTS',
   RESERVED = 'RESERVED',
@@ -82,7 +82,7 @@ const getErrorCode = (error: number): ErrorCode => {
   return ErrorCode.UNKNOWN
 }
 
-type Error = {
+export type Error = {
   mainAux1Baseline: ErrorCode,
   mainAux2Baseline: ErrorCode,
   reserved: number,
@@ -97,7 +97,7 @@ const getError = (error: number): Error => {
   return {
     mainAux1Baseline: getErrorCode(main1),
     mainAux2Baseline: getErrorCode(main2),
-    reserved: Buffer.from([reserved]).readUInt8(),
+    reserved: reserved,
     notRequestedAttitude
   }
 }
@@ -105,7 +105,7 @@ const getError = (error: number): Error => {
 const DO_NOT_USE_DATA = -2 * Math.pow(10, 10)
 const getData = (data: number) => (data !== DO_NOT_USE_DATA) ? data : null
 
-type AttCovEuler = {
+export type AttCovEuler = {
   reserved: number,
   error: number,
   covHeadHead: number | null,
@@ -127,8 +127,8 @@ export const attCovEuler = (blockRevision: number, data: Buffer): SBFBodyData =>
     reserved: data.readUIntLE(RESERVED_INDEX, RESERVED_LENGTH),
     error: data.readUIntLE(ERROR_INDEX, ERROR_LENGTH),
     covHeadHead: getData(data.readFloatLE(COV_HEAD_HEAD_INDEX)),
-    covPitchPitch: getData(data.readFloatLE(COV_HEAD_PITCH_INDEX)),
-    covRollRoll: getData(data.readFloatLE(COV_HEAD_ROLL_INDEX)),
+    covPitchPitch: getData(data.readFloatLE(COV_PITCH_PITCH_INDEX)),
+    covRollRoll: getData(data.readFloatLE(COV_ROLL_ROLL_INDEX)),
     covHeadPitch: getData(data.readFloatLE(COV_HEAD_PITCH_INDEX)),
     covHeadRoll: getData(data.readFloatLE(COV_HEAD_ROLL_INDEX)),
     covPitchRoll: getData(data.readFloatLE(COV_PITCH_ROLL_INDEX)),
