@@ -68,7 +68,7 @@ const ROLL_DOT_LENGTH = FLOAT
 
 const PADDING_INDEX = ROLL_DOT_INDEX + ROLL_DOT_LENGTH
 
-enum ErrorCode {
+export enum ErrorCode {
   NO = 'NO_ERROR',
   MEASUREMENTS = 'NOT_ENOUGH_MEASUREMENTS',
   RESERVED = 'RESERVED',
@@ -85,7 +85,7 @@ const getErrorCode = (error: number): ErrorCode => {
   return ErrorCode.UNKNOWN
 }
 
-type Error = {
+export type Error = {
   mainAux1Baseline: ErrorCode,
   mainAux2Baseline: ErrorCode,
   reserved: number,
@@ -100,12 +100,12 @@ const getError = (error: number): Error => {
   return {
     mainAux1Baseline: getErrorCode(main1),
     mainAux2Baseline: getErrorCode(main2),
-    reserved: Buffer.from([reserved]).readUInt8(),
+    reserved: reserved,
     notRequestedAttitude
   }
 }
 
-enum Mode {
+export enum Mode {
   NO = 'NO_ATTITUDE',
   HEADING_PICH_FLOAT = 'HEADING_PICH_FLOAT',
   HEADING_PICH_FIXED = 'HEADING_PICH_FIXED',
@@ -131,7 +131,12 @@ const getSatellites = (satellites: number) => (satellites !== DO_NOT_USE_SATELLI
 const DO_NOT_USE_DATA = -2 * Math.pow(10, 10)
 const getData = (data: number) => (data !== DO_NOT_USE_DATA) ? data : null
 
-type AttEuler = {
+export type AttEulerMetadata = {
+  error: Error,
+  mode: Mode
+}
+
+export type AttEuler = {
   nrSV: number | null,
   error: number,
   mode: number,
@@ -143,10 +148,7 @@ type AttEuler = {
   rollDot: number | null,
   headingDot: number | null,
   padding: number | null,
-  metadata: {
-    error: Error,
-    mode: Mode
-  }
+  metadata: AttEulerMetadata
 }
 
 export const attEuler = (blockRevision: number, data: Buffer): SBFBodyData => {
