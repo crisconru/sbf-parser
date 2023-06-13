@@ -73,7 +73,7 @@ export const getTypedData = (num: number, type: TypeData): TypedData | null => {
       buffer = Buffer.from(array.buffer, array.byteOffset, array.byteLength)
       number = buffer.readFloatLE()
       break
-    case TypeData.FLOAT:
+    case TypeData.DOUBLE:
       array = new Float64Array(1)
       array[0] = num
       buffer = Buffer.from(array.buffer, array.byteOffset, array.byteLength)
