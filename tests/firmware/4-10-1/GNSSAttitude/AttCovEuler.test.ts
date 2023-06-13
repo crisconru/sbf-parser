@@ -38,46 +38,56 @@ Cov_PitchRoll       float32  degree^2  -2 * 10¹⁰  Covariance between Euler an
                                                   The values are currently set to their Do-Not-Use values.
 Padding                uint                       Padding bytes
 */
-describe('Testing AttCovEuler', () => {
-  const getNameFrameData = () => {
-    const frameName = 'AttCovEuler'
-  
-    const { number: reserved, buffer: reservedBuffer } = getTypedData(randomNumber(RandomNumberType.UINT), TypeData.UINT8) as TypedData
-    const { number: error, buffer: errorBuffer } = getTypedData(0b01110000, TypeData.UINT8) as TypedData
-    const { number: covHeadHead, buffer: covHeadHeadBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: covPitchPitch, buffer: covPitchPitchBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: covRollRoll, buffer: covRollRollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: covHeadPitch, buffer: covHeadPitchBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: covHeadRoll, buffer: covHeadRollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: covPitchRoll, buffer: covPitchRollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const padding = null
-    const metadataError: Error = {
-      mainAux1Baseline: ErrorCode.NO,
-      mainAux2Baseline: ErrorCode.NO,
-      reserved: 0b0111,
-      notRequestedAttitude: false
-    }
-  
-    const frame: AttCovEuler = {
-      reserved, error, covHeadHead, covPitchPitch, covRollRoll, covHeadPitch, covHeadRoll, covPitchRoll,
-      padding,
-      metadata: {
-        error: metadataError,
-      }
-    }
-    const data: Buffer = Buffer.from([
-      ...reservedBuffer,
-      ...errorBuffer,
-      ...covHeadHeadBuffer,
-      ...covPitchPitchBuffer,
-      ...covRollRollBuffer,
-      ...covHeadPitchBuffer,
-      ...covHeadRollBuffer,
-      ...covPitchRollBuffer,
-    ])
-
-    return { frameName, frame, data }
+const getNameFrameData = () => {
+  const frameName = 'AttCovEuler'
+  // Reserved
+  const { number: reserved, buffer: reservedBuffer } = getTypedData(randomNumber(RandomNumberType.UINT), TypeData.UINT8) as TypedData
+  // Error
+  const { number: error, buffer: errorBuffer } = getTypedData(0b01110000, TypeData.UINT8) as TypedData
+  // Cov_HeadHead
+  const { number: covHeadHead, buffer: covHeadHeadBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Cov_PitchPitch
+  const { number: covPitchPitch, buffer: covPitchPitchBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Cov_RollRoll
+  const { number: covRollRoll, buffer: covRollRollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Cov_HeadPitch
+  const { number: covHeadPitch, buffer: covHeadPitchBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Cov_HeadRoll
+  const { number: covHeadRoll, buffer: covHeadRollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Cov_PitchRoll
+  const { number: covPitchRoll, buffer: covPitchRollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Padding
+  const padding = null
+  // Metadata
+  const metadataError: Error = {
+    mainAux1Baseline: ErrorCode.NO,
+    mainAux2Baseline: ErrorCode.NO,
+    reserved: 0b0111,
+    notRequestedAttitude: false
   }
+
+  const frame: AttCovEuler = {
+    reserved, error, covHeadHead, covPitchPitch, covRollRoll, covHeadPitch, covHeadRoll, covPitchRoll,
+    padding,
+    metadata: {
+      error: metadataError,
+    }
+  }
+  const data: Buffer = Buffer.concat([
+    reservedBuffer,
+    errorBuffer,
+    covHeadHeadBuffer,
+    covPitchPitchBuffer,
+    covRollRollBuffer,
+    covHeadPitchBuffer,
+    covHeadRollBuffer,
+    covPitchRollBuffer,
+  ])
+
+  return { frameName, frame, data }
+}
+
+describe('Testing AttCovEuler', () => {
 
   test('Regular body', () => {
     const { frameName, frame, data } = getNameFrameData()

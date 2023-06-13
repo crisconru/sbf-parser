@@ -36,51 +36,63 @@ RollDot               float  deg/sec  -2 * 10¹⁰  Rate of change of the roll a
 HeadingDot            float  deg/sec  -2 * 10¹⁰  Rate of change of the heading angle
 Padding                uint                      Padding bytes
 */
-describe('Testing AttEuler', () => {
-  const getNameFrameData = () => {
-    const frameName = 'AttEuler'
-  
-    const { number: nrSV, buffer: nrSVBuffer } = getTypedData(randomNumber(RandomNumberType.UINT), TypeData.UINT8) as TypedData
-    const { number: error, buffer: errorBuffer } = getTypedData(0b01110000, TypeData.UINT8) as TypedData
-    const { number: mode, buffer: modeBuffer } = getTypedData(4, TypeData.UINT16) as TypedData
-    const { number: reserved, buffer: reservedBuffer } = getTypedData(randomNumber(RandomNumberType.UINT), TypeData.UINT16) as TypedData
-    const { number: heading, buffer: headingBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: pitch, buffer: pitchBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: roll, buffer: rollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: headingDot, buffer: headingDotBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: pitchDot, buffer: pitchDotBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const { number: rollDot, buffer: rollDotBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
-    const padding = null
-    const metadataError = {
-      mainAux1Baseline: ErrorCode.NO,
-      mainAux2Baseline: ErrorCode.NO,
-      reserved: 0b111,
-      notRequestedAttitude: false
-    } satisfies Error
-    const metadataMode: Mode = Mode.HEADING_PICH_ROLL_FIXED
-  
-    const frame: AttEuler = {
-      nrSV, error, mode, reserved, heading, pitch, roll, headingDot, pitchDot, rollDot,
-      padding,
-      metadata: {
-        error: metadataError,
-        mode: metadataMode
-      }
-    }
-    const data: Buffer = Buffer.from([
-      ...nrSVBuffer,
-      ...errorBuffer,
-      ...modeBuffer,
-      ...reservedBuffer,
-      ...headingBuffer,
-      ...pitchBuffer,
-      ...rollBuffer,
-      ...headingDotBuffer,
-      ...pitchDotBuffer,
-      ...rollDotBuffer
-    ])
-    return { frameName, frame, data }
+const getNameFrameData = () => {
+  const frameName = 'AttEuler'
+  // NrSV
+  const { number: nrSV, buffer: nrSVBuffer } = getTypedData(randomNumber(RandomNumberType.UINT), TypeData.UINT8) as TypedData
+  // Error
+  const { number: error, buffer: errorBuffer } = getTypedData(0b01110000, TypeData.UINT8) as TypedData
+  // Mode
+  const { number: mode, buffer: modeBuffer } = getTypedData(4, TypeData.UINT16) as TypedData
+  // Rserved
+  const { number: reserved, buffer: reservedBuffer } = getTypedData(randomNumber(RandomNumberType.UINT), TypeData.UINT16) as TypedData
+  // Heading
+  const { number: heading, buffer: headingBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Pitch
+  const { number: pitch, buffer: pitchBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Roll
+  const { number: roll, buffer: rollBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // HeadingDot
+  const { number: headingDot, buffer: headingDotBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // PitchDot
+  const { number: pitchDot, buffer: pitchDotBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // RollDot
+  const { number: rollDot, buffer: rollDotBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.FLOAT) as TypedData
+  // Paading
+  const padding = null
+  // Metadata
+  const metadataError: Error = {
+    mainAux1Baseline: ErrorCode.NO,
+    mainAux2Baseline: ErrorCode.NO,
+    reserved: 0b111,
+    notRequestedAttitude: false
   }
+  const metadataMode: Mode = Mode.HEADING_PICH_ROLL_FIXED
+  
+  const frame: AttEuler = {
+    nrSV, error, mode, reserved, heading, pitch, roll, headingDot, pitchDot, rollDot,
+    padding,
+    metadata: {
+      error: metadataError,
+      mode: metadataMode
+    }
+  }
+  const data: Buffer = Buffer.concat([
+    nrSVBuffer,
+    errorBuffer,
+    modeBuffer,
+    reservedBuffer,
+    headingBuffer,
+    pitchBuffer,
+    rollBuffer,
+    headingDotBuffer,
+    pitchDotBuffer,
+    rollDotBuffer
+  ])
+  return { frameName, frame, data }
+}
+
+describe('Testing AttEuler', () => {
 
   test('Regular body', () => {
     const { frameName, frame, data } = getNameFrameData()
