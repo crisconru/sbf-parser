@@ -73,7 +73,7 @@ const UP_VEL_LENGTH = DOUBLE
 
 const PADDING_SUB_INDEX = UP_VEL_INDEX + UP_VEL_LENGTH
 
-enum Error {
+export enum Error {
   NO = 'NO_ERROR',
   MEASUREMENTS = 'NOT_ENOUGH_MEASUREMENTS',
   RESERVED = 'RESERVED',
@@ -81,17 +81,17 @@ enum Error {
 
 }
 
-enum Ambiguity {
+export enum Ambiguity {
   FIXED = 'FIXED',
   FLOAT = 'FLOAT',
   UNKNOWN = 'UNKNOWN'
 }
 
-type AuxAntPositionSub = {
+export type AuxAntPositionSub = {
   nrSV: number | null,
-  error: number | null,
+  error: number,
   ambiguityType: number | null,
-  auxAntID: number | null,
+  auxAntID: number,
   deltaEast: number | null,
   deltaNorth: number | null,
   deltaUp: number | null,
@@ -105,7 +105,7 @@ type AuxAntPositionSub = {
   }
 }
 
-type AuxAntPositions = {
+export type AuxAntPositions = {
   n: number,
   sbLength: number,
   auxAntPositionSub: AuxAntPositionSub[],
@@ -158,10 +158,10 @@ const getAuxAntPositionSub = (data: Buffer): AuxAntPositionSub => {
     metadata: {}
   } as AuxAntPositionSub
   body.metadata = {
-    error: getError(body.error as number),
+    error: getError(body.error),
     ambiguityType: getAmbiguityType(body.ambiguityType as number)
   }
-  if (body.error === 0) {
+  if (body.error !== 0) {
     body.deltaEast = null
     body.deltaNorth = null
     body.deltaUp = null
