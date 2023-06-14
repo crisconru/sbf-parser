@@ -37,7 +37,7 @@ const OFFSET_LENGTH = FLOAT
 
 const PADDING_INDEX = OFFSET_INDEX + OFFSET_LENGTH
 
-enum TimeScale {
+export enum TimeScale {
   GPS = 'GPS',
   UTC = 'UTC',
   RECEIVER = 'Receiver',
@@ -59,7 +59,7 @@ const getTimeScale = (timeScale: number): TimeScale => {
   return TimeScale.UNKNOWN
 }
 
-type xPPSOffset = {
+export type xPPSOffset = {
   syncAge: number,
   timeScale: number,
   offset: number,
@@ -69,7 +69,11 @@ type xPPSOffset = {
   }
 }
 
-export const xppsOffset = (blockRevision: number, data: Buffer): SBFBodyData => {
+interface Response extends SBFBodyData {
+  body: xPPSOffset
+}
+
+export const xppsOffset = (blockRevision: number, data: Buffer): Response => {
   const name = 'xPPSOffset'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: xPPSOffset = {
@@ -80,5 +84,8 @@ export const xppsOffset = (blockRevision: number, data: Buffer): SBFBodyData => 
     metadata: {}
   } as xPPSOffset
   body.metadata.timeScale = getTimeScale(body.timeScale)
+  if (body.metadata.timeScale === TimeScale.RECEIVER) {
+    body.syncAge = 0
+  }
   return { name, body }
 }
