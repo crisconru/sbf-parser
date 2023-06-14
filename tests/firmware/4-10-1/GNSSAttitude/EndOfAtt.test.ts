@@ -11,7 +11,7 @@ describe('Testing EndOfAtt', () => {
   test('Regular body', () => {
     const frameName = 'EndOfAtt'
     const { name, body } = endOfAtt(0, Buffer.from([]))
-    expect(frameName).toBe(name)
+    expect(name).toBe(frameName)
     expect(body.padding).toBeNull()
   })
   test('Padding length', () => {
