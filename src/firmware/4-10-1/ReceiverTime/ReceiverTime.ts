@@ -59,14 +59,14 @@ const PADDING_INDEX = SYNC_LEVEL_INDEX + SYNC_LEVEL_LENGTH
 const DO_NOT_USE = -128
 const getTimeData = (data: number) => (data !== DO_NOT_USE) ? data : null
 
-enum Synchronization {
+export enum Synchronization {
   FULL = 'FULL',
   NOT_FULL = 'NOT_FULL',
   NONE = 'NONE',
   UNKNOWN = 'UNKNOWN'
 }
 
-type SyncLevel = {
+export type SyncLevel = {
   synchronization: Synchronization,
   wnSet: boolean,
   towSet: boolean,
@@ -95,7 +95,7 @@ const getSyncLevel = (syncLevel: number): SyncLevel => {
   return response
 }
 
-type ReceiverTime = {
+export type ReceiverTime = {
   utcYear: number,
   utcMonth: number,
   utcDay: number,
@@ -110,7 +110,11 @@ type ReceiverTime = {
   }
 }
 
-export const receiverTime = (blockRevision: number, data: Buffer): SBFBodyData => {
+interface Response extends SBFBodyData {
+  body: ReceiverTime
+}
+
+export const receiverTime = (blockRevision: number, data: Buffer): Response => {
   const name = 'ReceiverTime'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: ReceiverTime = {
@@ -121,7 +125,7 @@ export const receiverTime = (blockRevision: number, data: Buffer): SBFBodyData =
     utcMin: data.readIntLE(UTC_MIN_INDEX, UTC_MIN_LENGTH),
     utcSec: data.readIntLE(UTC_SEC_INDEX, UTC_SEC_LENGTH),
     deltaLS: data.readIntLE(DELTA_LS_INDEX, DELTA_LS_LENGTH),
-    syncLevel: data.readIntLE(SYNC_LEVEL_INDEX, SYNC_LEVEL_LENGTH),
+    syncLevel: data.readUIntLE(SYNC_LEVEL_INDEX, SYNC_LEVEL_LENGTH),
     padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
     metadata: {}
   } as ReceiverTime
