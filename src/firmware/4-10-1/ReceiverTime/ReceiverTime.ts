@@ -96,13 +96,13 @@ const getSyncLevel = (syncLevel: number): SyncLevel => {
 }
 
 export type ReceiverTime = {
-  utcYear: number,
-  utcMonth: number,
-  utcDay: number,
-  utcHour: number,
-  utcMin: number,
-  utcSec: number,
-  deltaLS: number,
+  utcYear: number | null,
+  utcMonth: number | null,
+  utcDay: number | null,
+  utcHour: number | null,
+  utcMin: number | null,
+  utcSec: number | null,
+  deltaLS: number | null,
   syncLevel: number,
   padding: number | null,
   metadata: {
@@ -118,13 +118,13 @@ export const receiverTime = (blockRevision: number, data: Buffer): Response => {
   const name = 'ReceiverTime'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: ReceiverTime = {
-    utcYear: data.readIntLE(UTC_YEAR_INDEX, UTC_YEAR_LENGTH),
-    utcMonth: data.readIntLE(UTC_MONTH_INDEX, UTC_MONTH_LENGTH),
-    utcDay: data.readIntLE(UTC_DAY_INDEX, UTC_DAY_LENGTH),
-    utcHour: data.readIntLE(UTC_HOUR_INDEX, UTC_HOUR_LENGTH),
-    utcMin: data.readIntLE(UTC_MIN_INDEX, UTC_MIN_LENGTH),
-    utcSec: data.readIntLE(UTC_SEC_INDEX, UTC_SEC_LENGTH),
-    deltaLS: data.readIntLE(DELTA_LS_INDEX, DELTA_LS_LENGTH),
+    utcYear:  getTimeData(data.readIntLE(UTC_YEAR_INDEX, UTC_YEAR_LENGTH)),
+    utcMonth: getTimeData(data.readIntLE(UTC_MONTH_INDEX, UTC_MONTH_LENGTH)),
+    utcDay:   getTimeData(data.readIntLE(UTC_DAY_INDEX, UTC_DAY_LENGTH)),
+    utcHour:  getTimeData(data.readIntLE(UTC_HOUR_INDEX, UTC_HOUR_LENGTH)),
+    utcMin:   getTimeData(data.readIntLE(UTC_MIN_INDEX, UTC_MIN_LENGTH)),
+    utcSec:   getTimeData(data.readIntLE(UTC_SEC_INDEX, UTC_SEC_LENGTH)),
+    deltaLS:  getTimeData(data.readIntLE(DELTA_LS_INDEX, DELTA_LS_LENGTH)),
     syncLevel: data.readUIntLE(SYNC_LEVEL_INDEX, SYNC_LEVEL_LENGTH),
     padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
     metadata: {}
