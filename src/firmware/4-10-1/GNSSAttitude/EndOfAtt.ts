@@ -13,7 +13,11 @@ type EndOfAtt = {
   padding: number | null
 }
 
-export const endOfAtt = (blockRevision: number, data: Buffer): SBFBodyData => {
+interface Response extends SBFBodyData {
+  body: EndOfAtt
+}
+
+export const endOfAtt = (blockRevision: number, data: Buffer): Response => {
   const name = 'EndOfAtt'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: EndOfAtt = {

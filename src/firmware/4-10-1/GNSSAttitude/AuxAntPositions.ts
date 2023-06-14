@@ -184,11 +184,16 @@ const getSubBodies = (antennas: number, length: number, data: Buffer): AuxAntPos
   return subBodies
 }
 
-export const auxAntPositions = (blockRevision: number, data: Buffer): SBFBodyData => {
+
+interface Response extends SBFBodyData {
+  body: AuxAntPositions
+}
+
+export const auxAntPositions = (blockRevision: number, data: Buffer): Response => {
   const name = 'AuxAntPositions'
   // Check Antennas
   const antennas = data.readUIntLE(N_INDEX, N_LENGTH)
-  if (antennas < 1) return { name, body: { antennas } }
+  if (antennas < 1) return { name, body: { n: antennas } } as Response
   // Sub bodies
   const sbLength = data.readUIntLE(SBLENGTH_INDEX, SBLENGTH_LENGTH)
   const subBodiesStart = 2

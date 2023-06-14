@@ -151,7 +151,11 @@ export type AttEuler = {
   metadata: AttEulerMetadata
 }
 
-export const attEuler = (blockRevision: number, data: Buffer): SBFBodyData => {
+interface Response extends SBFBodyData {
+  body: AttEuler
+}
+
+export const attEuler = (blockRevision: number, data: Buffer): Response => {
   const name = 'AttEuler'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: AttEuler = {

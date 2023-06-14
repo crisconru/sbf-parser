@@ -120,7 +120,12 @@ export type AttCovEuler = {
   }
 }
 
-export const attCovEuler = (blockRevision: number, data: Buffer): SBFBodyData => {
+
+interface Response extends SBFBodyData {
+  body: AttCovEuler
+}
+
+export const attCovEuler = (blockRevision: number, data: Buffer): Response => {
   const name = 'AttCovEuler'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: AttCovEuler = {

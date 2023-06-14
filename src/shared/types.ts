@@ -21,7 +21,7 @@ export interface SBFTimeStamp extends SBFTime {
 
 export type SBFBody = object | null
 
-export type SBFBodyData = {
+export interface SBFBodyData {
   name: string,
   body: SBFBody
 }
