@@ -92,26 +92,39 @@ type AmbiguityTest = {
 }
 const ambiguityTestDefault: AmbiguityTest = { ambiguity: 0, type: Ambiguity.FIXED }
 
+type InputData = {
+  antennas: number,
+  subFramesLength: number,
+  errorTest: ErrorTest,
+  ambiguityTest: AmbiguityTest
+}
 
-const getNameFrameData = (antennas: number = 2, subFramesLength: number = 52, errorTest: ErrorTest = errorTestDefault, ambiguityTest: AmbiguityTest = ambiguityTestDefault) => {
+const defaultInput: InputData = {
+  antennas: 2,
+  subFramesLength: 52,
+  errorTest: errorTestDefault,
+  ambiguityTest: ambiguityTestDefault
+} 
+
+const getNameFrameData = (input: InputData = defaultInput) => {
   const frameName = 'AuxAntPositions'
   // N
-  const { number: n, buffer: nBuffer } = getTypedData(antennas, TypeData.UINT8) as TypedData
+  const { number: n, buffer: nBuffer } = getTypedData(input.antennas, TypeData.UINT8) as TypedData
   // SBLength
-  const { number: sbLength, buffer: sbLengthBuffer } = getTypedData(subFramesLength, TypeData.UINT8) as TypedData
+  const { number: sbLength, buffer: sbLengthBuffer } = getTypedData(input.subFramesLength, TypeData.UINT8) as TypedData
   // AuxAntPositionSub[] * N
   const { frameSub: frameSub1, dataSub: dataSub1 } = getAuxAntPositionSub(
     sbLength,
     randomNumber(RandomNumberType.UINT),
-    errorTest.error, errorTest.type,
-    ambiguityTest.ambiguity, ambiguityTest.type,
+    input.errorTest.error, input.errorTest.type,
+    input.ambiguityTest.ambiguity, input.ambiguityTest.type,
     0
   )
   const { frameSub: frameSub2, dataSub: dataSub2 } = getAuxAntPositionSub(
     sbLength,
     randomNumber(RandomNumberType.UINT),
-    errorTest.error, errorTest.type,
-    ambiguityTest.ambiguity, ambiguityTest.type,
+    input.errorTest.error, input.errorTest.type,
+    input.ambiguityTest.ambiguity, input.ambiguityTest.type,
     1
   )
   const auxAntPositionSub = [frameSub1, frameSub2]
@@ -154,7 +167,7 @@ describe('Testing AuxAntPositions', () => {
     const errorTest: ErrorTest = { error: 1, type: Error.MEASUREMENTS }
     const ambiguityTest: AmbiguityTest = { ambiguity: 0, type: Ambiguity.FIXED }
 
-    const { frame: frame1, data: data1 } = getNameFrameData(antennas, subFramesLength, errorTest, ambiguityTest)
+    const { frame: frame1, data: data1 } = getNameFrameData({ antennas, subFramesLength, errorTest, ambiguityTest })
     const { body: body1 } = auxAntPositions(0, data1) as { name: string, body: AuxAntPositions }
     expect(body1).not.toStrictEqual(frame1)
 
@@ -166,7 +179,7 @@ describe('Testing AuxAntPositions', () => {
 
     errorTest.error = 2 
     errorTest.type = Error.RESERVED
-    const { frame: frame2, data: data2 } = getNameFrameData(antennas, subFramesLength, errorTest, ambiguityTest)
+    const { frame: frame2, data: data2 } = getNameFrameData({ antennas, subFramesLength, errorTest, ambiguityTest })
     const { body: body2 } = auxAntPositions(0, data2) as { name: string, body: AuxAntPositions }
     expect(body2).not.toStrictEqual(frame2)
 
@@ -177,7 +190,7 @@ describe('Testing AuxAntPositions', () => {
     })
 
     errorTest.error = 3
-    const { frame: frame3, data: data3 } = getNameFrameData(antennas, subFramesLength, errorTest, ambiguityTest)
+    const { frame: frame3, data: data3 } = getNameFrameData({ antennas, subFramesLength, errorTest, ambiguityTest })
     const { body: body3 } = auxAntPositions(0, data3) as { name: string, body: AuxAntPositions }
     expect(body3).not.toStrictEqual(frame3)
 
@@ -189,7 +202,7 @@ describe('Testing AuxAntPositions', () => {
 
     errorTest.error = 4
     errorTest.type = Error.UNKNOWN
-    const { frame: frame4, data: data4 } = getNameFrameData(antennas, subFramesLength, errorTest, ambiguityTest)
+    const { frame: frame4, data: data4 } = getNameFrameData({ antennas, subFramesLength, errorTest, ambiguityTest })
     const { body: body4 } = auxAntPositions(0, data4) as { name: string, body: AuxAntPositions }
     expect(body4).not.toStrictEqual(frame4)
 
@@ -206,19 +219,19 @@ describe('Testing AuxAntPositions', () => {
     const errorTest: ErrorTest = { error: 0, type: Error.NO }
     const ambiguityTest: AmbiguityTest = { ambiguity: 0, type: Ambiguity.FIXED }
 
-    const { frame: frame1, data: data1 } = getNameFrameData(antennas, subFramesLength, errorTest, ambiguityTest)
+    const { frame: frame1, data: data1 } = getNameFrameData({ antennas, subFramesLength, errorTest, ambiguityTest })
     const { body: body1 } = auxAntPositions(0, data1) as { name: string, body: AuxAntPositions }
     expect(body1).toStrictEqual(frame1)
 
     ambiguityTest.ambiguity = 1
     ambiguityTest.type = Ambiguity.FLOAT
-    const { frame: frame2, data: data2 } = getNameFrameData(antennas, subFramesLength, errorTest, ambiguityTest)
+    const { frame: frame2, data: data2 } = getNameFrameData({ antennas, subFramesLength, errorTest, ambiguityTest })
     const { body: body2 } = auxAntPositions(0, data2) as { name: string, body: AuxAntPositions }
     expect(body2).toStrictEqual(frame2)
 
     ambiguityTest.ambiguity = 2
     ambiguityTest.type = Ambiguity.UNKNOWN
-    const { frame: frame3, data: data3 } = getNameFrameData(antennas, subFramesLength, errorTest, ambiguityTest)
+    const { frame: frame3, data: data3 } = getNameFrameData({ antennas, subFramesLength, errorTest, ambiguityTest })
     const { body: body3 } = auxAntPositions(0, data3) as { name: string, body: AuxAntPositions }
     expect(body3).toStrictEqual(frame3)
 
