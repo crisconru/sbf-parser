@@ -1,4 +1,5 @@
 import { SBFBodyDataMap } from "../../../shared/types"
+import { dop } from "./DOP"
 import { endOfPVT } from "./EndOfPVT"
 import { ptvSupport } from "./PVTSupport"
 import { ptvSupportA } from "./PVTSupportA"
@@ -17,7 +18,7 @@ const blocks: SBFBodyDataMap = new Map()
 // 5908 - VelCovGeodetic
 // blocks.set(5908, velCovGeodetic)
 // 4001 - DOP
-// blocks.set(4001, dop)
+blocks.set(4001, dop)
 // 4044 - PosCart
 // blocks.set(4044, posCart)
 // 4052 - PosLocal
