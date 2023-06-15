@@ -1,4 +1,4 @@
-import { FLOAT, UINT16, UINT8 } from "../../../shared/constants"
+import { BYTES_LENGTH } from "../../../shared/constants"
 import { SBFBodyData } from "../../../shared/types"
 import { bitState } from "../../../shared/utils"
 /* AttEuler -> Number: 5938 => "OnChange" interval: default PVT output rate
@@ -37,34 +37,34 @@ import { bitState } from "../../../shared/utils"
   Padding                uint                      Padding bytes
 */
 const NRSV_INDEX = 0
-const NRSV_LENGTH = UINT8
+const NRSV_LENGTH = BYTES_LENGTH.UINT8
 
 const ERROR_INDEX = NRSV_INDEX + NRSV_LENGTH
-const ERROR_LENGTH = UINT8
+const ERROR_LENGTH = BYTES_LENGTH.UINT8
 
 const MODE_INDEX = ERROR_INDEX + ERROR_LENGTH
-const MODE_LENGTH = UINT16
+const MODE_LENGTH = BYTES_LENGTH.UINT16
 
 const RESERVED_INDEX = MODE_INDEX + MODE_LENGTH
-const RESERVED_LENGTH = UINT16
+const RESERVED_LENGTH = BYTES_LENGTH.UINT16
 
 const HEADING_INDEX = RESERVED_INDEX + RESERVED_LENGTH
-const HEADING_LENGTH = FLOAT
+const HEADING_LENGTH = BYTES_LENGTH.FLOAT
 
 const PITCH_INDEX = HEADING_INDEX + HEADING_LENGTH
-const PITCH_LENGTH = FLOAT
+const PITCH_LENGTH = BYTES_LENGTH.FLOAT
 
 const ROLL_INDEX = PITCH_INDEX + PITCH_LENGTH
-const ROLL_LENGTH = FLOAT
+const ROLL_LENGTH = BYTES_LENGTH.FLOAT
 
 const HEADING_DOT_INDEX = ROLL_INDEX + ROLL_LENGTH
-const HEADING_DOT_LENGTH = FLOAT
+const HEADING_DOT_LENGTH = BYTES_LENGTH.FLOAT
 
 const PITCH_DOT_INDEX = HEADING_DOT_INDEX + HEADING_DOT_LENGTH
-const PITCH_DOT_LENGTH = FLOAT
+const PITCH_DOT_LENGTH = BYTES_LENGTH.FLOAT
 
 const ROLL_DOT_INDEX = PITCH_DOT_INDEX + PITCH_DOT_LENGTH
-const ROLL_DOT_LENGTH = FLOAT
+const ROLL_DOT_LENGTH = BYTES_LENGTH.FLOAT
 
 const PADDING_INDEX = ROLL_DOT_INDEX + ROLL_DOT_LENGTH
 

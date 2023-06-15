@@ -1,4 +1,4 @@
-import { INT8, UINT8 } from "../../../shared/constants"
+import { BYTES_LENGTH } from "../../../shared/constants"
 import { SBFBodyData } from "../../../shared/types"
 import { bitState } from "../../../shared/utils"
 /* ReceiverTime -> Number: 5914 => "OnChange" interval: 1 second
@@ -31,28 +31,28 @@ import { bitState } from "../../../shared/utils"
   Padding        uint                      Padding bytes
 */
 const UTC_YEAR_INDEX = 0
-const UTC_YEAR_LENGTH = INT8
+const UTC_YEAR_LENGTH = BYTES_LENGTH.INT8
 
 const UTC_MONTH_INDEX = UTC_YEAR_INDEX + UTC_YEAR_LENGTH
-const UTC_MONTH_LENGTH = INT8
+const UTC_MONTH_LENGTH = BYTES_LENGTH.INT8
 
 const UTC_DAY_INDEX = UTC_MONTH_INDEX + UTC_MONTH_LENGTH
-const UTC_DAY_LENGTH = INT8
+const UTC_DAY_LENGTH = BYTES_LENGTH.INT8
 
 const UTC_HOUR_INDEX = UTC_DAY_INDEX + UTC_DAY_LENGTH
-const UTC_HOUR_LENGTH = INT8
+const UTC_HOUR_LENGTH = BYTES_LENGTH.INT8
 
 const UTC_MIN_INDEX = UTC_HOUR_INDEX + UTC_HOUR_LENGTH
-const UTC_MIN_LENGTH = INT8
+const UTC_MIN_LENGTH = BYTES_LENGTH.INT8
 
 const UTC_SEC_INDEX = UTC_MIN_INDEX + UTC_MIN_LENGTH
-const UTC_SEC_LENGTH = INT8
+const UTC_SEC_LENGTH = BYTES_LENGTH.INT8
 
 const DELTA_LS_INDEX = UTC_SEC_INDEX + UTC_SEC_LENGTH
-const DELTA_LS_LENGTH = INT8
+const DELTA_LS_LENGTH = BYTES_LENGTH.INT8
 
 const SYNC_LEVEL_INDEX = DELTA_LS_INDEX + DELTA_LS_LENGTH
-const SYNC_LEVEL_LENGTH = UINT8
+const SYNC_LEVEL_LENGTH = BYTES_LENGTH.UINT8
 
 const PADDING_INDEX = SYNC_LEVEL_INDEX + SYNC_LEVEL_LENGTH
 

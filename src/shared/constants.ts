@@ -38,15 +38,18 @@ export const UNKNOWN_SBF_BODY_DATA: SBFBodyData = {
   body: null
 }
 
-export const INT8 = 1
-export const INT16 = 2
-export const INT32 = 4
-export const INT64 = 8
-
-export const UINT8 = 1
-export const UINT16 = 2
-export const UINT32 = 4
-export const UINT64 = 8
-
-export const FLOAT = 4
-export const DOUBLE = 8
+export const BYTES_LENGTH = {
+  // INTEGER
+  INT8: 1,
+  INT16: 2,
+  INT32: 4,
+  INT64: 8,
+  // UNSIGNED INTEGER
+  UINT8: 1,
+  UINT16: 2,
+  UINT32: 4,
+  UINT64: 8,
+  // FLOAT
+  FLOAT: 4,
+  DOUBLE: 8,
+}

@@ -1,4 +1,4 @@
-import { FLOAT, UINT16, UINT8 } from "../../../shared/constants"
+import { BYTES_LENGTH } from "../../../shared/constants"
 import { SBFBodyData } from "../../../shared/types"
 /* DOP -> Number: 4001 => "OnChange" interval: default PVT output rate
   This block contains both Dilution of Precision (DOP) values and SBAS 
@@ -48,24 +48,24 @@ import { SBFBodyData } from "../../../shared/types"
   Padding          uint                    Padding bytes
 */
 const NRSV_INDEX = 0
-const NRSV_LENGTH = UINT8
+const NRSV_LENGTH = BYTES_LENGTH.UINT8
 
 const RESERVED_INDEX = NRSV_INDEX + NRSV_LENGTH
-const RESERVED_LENGTH = UINT8
+const RESERVED_LENGTH = BYTES_LENGTH.UINT8
 
 const PDOP_INDEX = RESERVED_INDEX + RESERVED_LENGTH
-const PDOP_LENGTH = UINT16
+const PDOP_LENGTH = BYTES_LENGTH.UINT16
 const TDOP_INDEX = PDOP_INDEX + PDOP_LENGTH
-const TDOP_LENGTH = UINT16
+const TDOP_LENGTH = BYTES_LENGTH.UINT16
 const HDOP_INDEX = TDOP_INDEX + TDOP_LENGTH
-const HDOP_LENGTH = UINT16
+const HDOP_LENGTH = BYTES_LENGTH.UINT16
 const VDOP_INDEX = HDOP_INDEX + HDOP_LENGTH
-const VDOP_LENGTH = UINT16
+const VDOP_LENGTH = BYTES_LENGTH.UINT16
 
 const HPL_INDEX = VDOP_INDEX + VDOP_LENGTH
-const HPL_LENGTH = FLOAT
+const HPL_LENGTH = BYTES_LENGTH.FLOAT
 const VPL_INDEX = HPL_INDEX + HPL_LENGTH
-const VPL_LENGTH = FLOAT
+const VPL_LENGTH = BYTES_LENGTH.FLOAT
 
 const PADDING_INDEX = VPL_INDEX + VPL_LENGTH
 

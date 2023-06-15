@@ -1,4 +1,4 @@
-import { FLOAT, UINT8 } from "../../../shared/constants"
+import { BYTES_LENGTH } from "../../../shared/constants"
 import { SBFBodyData } from "../../../shared/types"
 /* xPPSOffset -> Number: 5911 => "OnChange" interval: PPS rate
   The xPPSOffset block contains the offset between the true xPPS pulse and 
@@ -27,13 +27,13 @@ import { SBFBodyData } from "../../../shared/types"
   Padding       uint                           Padding bytes
 */
 const SYNC_AGE_INDEX = 0
-const SYNC_AGE_LENGTH = UINT8
+const SYNC_AGE_LENGTH = BYTES_LENGTH.UINT8
 
 const TIME_SCALE_INDEX = SYNC_AGE_INDEX + SYNC_AGE_LENGTH
-const TIME_SCALE_LENGTH = UINT8
+const TIME_SCALE_LENGTH = BYTES_LENGTH.UINT8
 
 const OFFSET_INDEX = TIME_SCALE_INDEX + TIME_SCALE_LENGTH
-const OFFSET_LENGTH = FLOAT
+const OFFSET_LENGTH = BYTES_LENGTH.FLOAT
 
 const PADDING_INDEX = OFFSET_INDEX + OFFSET_LENGTH
 
