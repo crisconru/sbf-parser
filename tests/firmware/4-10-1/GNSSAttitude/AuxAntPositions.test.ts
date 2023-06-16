@@ -37,15 +37,17 @@ import { Ambiguity, AuxAntPositionSub, AuxAntPositions, Error, auxAntPositions }
   UpVel               float64  m/sec   -2 * 10¹⁰  Velocity in Up direction    (relative to main antenna)
   Padding                uint
 */
-const getAuxAntPositionSub = (length: number, satellites: number, err: number, errMeta: Error, ambiguity: number, ambiguityMeta: Ambiguity, antID: number) => {
+type Input = { length: number, satellites: number, error: number, errorMeta: Error, ambiguity: number, ambiguityMeta: Ambiguity, antID: number }
+
+const getAuxAntPositionSub = (input: Input) => {
   // NrSV
-  const { number: nrSV, buffer: nrSVBuffer } = getTypedData(satellites, TypeData.UINT8) as TypedData
+  const { number: nrSV, buffer: nrSVBuffer } = getTypedData(input.satellites, TypeData.UINT8) as TypedData
   // Error
-  const { number: error, buffer: errorBuffer } = getTypedData(err, TypeData.UINT8) as TypedData
+  const { number: error, buffer: errorBuffer } = getTypedData(input.error, TypeData.UINT8) as TypedData
   // AmbiguityType
-  const { number: ambiguityType, buffer: ambiguityTypeBuffer } = getTypedData(ambiguity, TypeData.UINT8) as TypedData
+  const { number: ambiguityType, buffer: ambiguityTypeBuffer } = getTypedData(input.ambiguity, TypeData.UINT8) as TypedData
   // AuxAntID
-  const { number: auxAntID, buffer: auxAntIDBuffer } = getTypedData(antID, TypeData.UINT8) as TypedData
+  const { number: auxAntID, buffer: auxAntIDBuffer } = getTypedData(input.antID, TypeData.UINT8) as TypedData
   // DeltaEast
   const { number: deltaEast, buffer: deltaEastBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.DOUBLE) as TypedData
   // DeltaNorth
@@ -60,7 +62,7 @@ const getAuxAntPositionSub = (length: number, satellites: number, err: number, e
   const { number: upVel, buffer: upVelBuffer } = getTypedData(randomNumber(RandomNumberType.FLOAT), TypeData.DOUBLE) as TypedData
   // Padding
   const auxBuffer = Buffer.concat([nrSVBuffer, errorBuffer, ambiguityTypeBuffer, auxAntIDBuffer, deltaEastBuffer, deltaNorthBuffer, deltaUpBuffer, eastVelBuffer, northVelBuffer, upVelBuffer ])
-  const paddingLength = length - auxBuffer.length
+  const paddingLength = input.length - auxBuffer.length
   const { padding, paddingBuffer } = (paddingLength > 0)
     ? { padding: 0, paddingBuffer: Buffer.from(Array(paddingLength).fill(0)) }
     : { padding: null, paddingBuffer: Buffer.from([]) }
@@ -68,8 +70,8 @@ const getAuxAntPositionSub = (length: number, satellites: number, err: number, e
   const frameSub: AuxAntPositionSub = {
     nrSV, error, ambiguityType, auxAntID, deltaEast, deltaNorth, deltaUp, eastVel, northVel, upVel, padding,
     metadata: {
-      error: errMeta,
-      ambiguityType: ambiguityMeta
+      error: input.errorMeta,
+      ambiguityType: input.ambiguityMeta
     }
   }
 
@@ -113,20 +115,24 @@ const getNameFrameData = (input: InputData = defaultInput) => {
   // SBLength
   const { number: sbLength, buffer: sbLengthBuffer } = getTypedData(input.subFramesLength, TypeData.UINT8) as TypedData
   // AuxAntPositionSub[] * N
-  const { frameSub: frameSub1, dataSub: dataSub1 } = getAuxAntPositionSub(
-    sbLength,
-    randomNumber(RandomNumberType.UINT),
-    input.errorTest.error, input.errorTest.type,
-    input.ambiguityTest.ambiguity, input.ambiguityTest.type,
-    0
-  )
-  const { frameSub: frameSub2, dataSub: dataSub2 } = getAuxAntPositionSub(
-    sbLength,
-    randomNumber(RandomNumberType.UINT),
-    input.errorTest.error, input.errorTest.type,
-    input.ambiguityTest.ambiguity, input.ambiguityTest.type,
-    1
-  )
+  const { frameSub: frameSub1, dataSub: dataSub1 } = getAuxAntPositionSub({
+    length: sbLength,
+    satellites: randomNumber(RandomNumberType.UINT),
+    error: input.errorTest.error,
+    errorMeta: input.errorTest.type,
+    ambiguity: input.ambiguityTest.ambiguity,
+    ambiguityMeta: input.ambiguityTest.type,
+    antID: 0
+})
+  const { frameSub: frameSub2, dataSub: dataSub2 } = getAuxAntPositionSub({
+    length: sbLength,
+    satellites: randomNumber(RandomNumberType.UINT),
+    error: input.errorTest.error,
+    errorMeta: input.errorTest.type,
+    ambiguity: input.ambiguityTest.ambiguity,
+    ambiguityMeta: input.ambiguityTest.type,
+    antID: 1
+})
   const auxAntPositionSub = [frameSub1, frameSub2]
   const auxAntPositionSubBuffer = Buffer.concat([dataSub1, dataSub2])
   // Padding
