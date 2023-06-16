@@ -1,4 +1,5 @@
-import { SBFBodyData } from "../../../shared/types"
+import { Padding, SBFBodyData } from "../../../shared/types"
+import { getPadding } from "../../../shared/utils"
 /* EndOfPVT -> Number: 5921 => "OnChange" interval: default PVT output rate
   This block marks the end of transmission of all PVT related blocks 
   belonging to the same epoch.
@@ -10,7 +11,7 @@ import { SBFBodyData } from "../../../shared/types"
 const PADDING_INDEX = 0
 
 export type EndOfPVT = {
-  padding: number | null
+  padding: Padding
 }
 
 interface Response extends SBFBodyData {
@@ -21,7 +22,7 @@ export const endOfPVT = (blockRevision: number, data: Buffer): Response => {
   const name = 'EndOfPVT'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: EndOfPVT = {
-    padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
+    padding: getPadding(data, PADDING_INDEX, PADDING_LENGTH),
   }
   return { name, body }
 }

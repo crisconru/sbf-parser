@@ -1,6 +1,6 @@
 import { BYTES_LENGTH } from "../../../shared/constants"
-import { SBFBodyData } from "../../../shared/types"
-import { bitState } from "../../../shared/utils"
+import { Padding, SBFBodyData } from "../../../shared/types"
+import { bitState, getPadding } from "../../../shared/utils"
 /* AttCovEuler -> Number: 5939 => "OnChange" interval: default PVT output rate
   This block contains the elements of the symmetric variance-covariance matrix 
   of the attitude angles reported in the AttEuler block
@@ -114,7 +114,7 @@ export type AttCovEuler = {
   covHeadPitch: number | null,
   covHeadRoll: number | null,
   covPitchRoll: number | null,
-  padding: number | null,
+  padding: Padding,
   metadata: {
     error: Error,
   }
@@ -137,7 +137,7 @@ export const attCovEuler = (blockRevision: number, data: Buffer): Response => {
     covHeadPitch: getData(data.readFloatLE(COV_HEAD_PITCH_INDEX)),
     covHeadRoll: getData(data.readFloatLE(COV_HEAD_ROLL_INDEX)),
     covPitchRoll: getData(data.readFloatLE(COV_PITCH_ROLL_INDEX)),
-    padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
+    padding: getPadding(data, PADDING_INDEX, PADDING_LENGTH),
     metadata: {}
   } as AttCovEuler
   body.metadata.error = getError(body.error)

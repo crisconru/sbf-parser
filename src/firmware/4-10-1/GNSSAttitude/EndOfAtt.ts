@@ -1,4 +1,5 @@
 import { SBFBodyData } from "../../../shared/types"
+import { getPadding } from "../../../shared/utils"
 /* EndOfAtt -> Number: 5943 => "OnChange" interval: default PVT output rate
   This block marks the end of transmission of all GNSS-attitude related blocks 
   belonging to the same epoch.
@@ -21,7 +22,7 @@ export const endOfAtt = (blockRevision: number, data: Buffer): Response => {
   const name = 'EndOfAtt'
   const PADDING_LENGTH = data.subarray(PADDING_INDEX).length
   const body: EndOfAtt = {
-    padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
+    padding: getPadding(data, PADDING_INDEX, PADDING_LENGTH),
   }
   return { name, body }
 }

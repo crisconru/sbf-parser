@@ -1,5 +1,5 @@
 import { BYTES_LENGTH } from "../../../shared/constants"
-import { SBFBodyData } from "../../../shared/types"
+import { Padding, SBFBodyData } from "../../../shared/types"
 /* AuxAntPositions -> Number: 5942 => "OnChange" interval: default PVT output rate
   The AuxAntPositions block contains the relative position and velocity of the 
   different antennas in a multi-antenna receiver.
@@ -98,7 +98,7 @@ export type AuxAntPositionSub = {
   eastVel: number | null,
   northVel: number | null,
   upVel: number | null,
-  padding: number | null,
+  padding: Padding,
   metadata: {
     error: Error,
     ambiguityType: Ambiguity

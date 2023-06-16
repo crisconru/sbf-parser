@@ -1,3 +1,5 @@
+export type Padding = number | null
+
 export type SBFID = {
   blockNumber: number,
   blockRevision: number

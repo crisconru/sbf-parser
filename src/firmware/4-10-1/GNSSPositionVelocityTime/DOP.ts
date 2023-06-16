@@ -1,5 +1,6 @@
 import { BYTES_LENGTH } from "../../../shared/constants"
 import { SBFBodyData } from "../../../shared/types"
+import { getPadding } from "../../../shared/utils"
 /* DOP -> Number: 4001 => "OnChange" interval: default PVT output rate
   This block contains both Dilution of Precision (DOP) values and SBAS 
   protection levels. The DOP values result from a trace of the unit position 
@@ -100,7 +101,7 @@ export const dop = (blockRevision: number, data: Buffer): Response => {
     vDOP: data.readUIntLE(VDOP_INDEX, VDOP_LENGTH) / 100,
     hpl: getData(data.readFloatLE(HPL_INDEX)),
     vpl: getData(data.readFloatLE(VPL_INDEX)),
-    padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
+    padding: getPadding(data, PADDING_INDEX, PADDING_LENGTH),
   }
   return { name, body }
 }

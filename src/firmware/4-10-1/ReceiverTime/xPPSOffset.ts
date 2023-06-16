@@ -1,5 +1,6 @@
 import { BYTES_LENGTH } from "../../../shared/constants"
-import { SBFBodyData } from "../../../shared/types"
+import { Padding, SBFBodyData } from "../../../shared/types"
+import { getPadding } from "../../../shared/utils"
 /* xPPSOffset -> Number: 5911 => "OnChange" interval: PPS rate
   The xPPSOffset block contains the offset between the true xPPS pulse and 
   the actual pulse output by the receiver. It is output right after each xPPS pulse.
@@ -63,7 +64,7 @@ export type xPPSOffset = {
   syncAge: number,
   timeScale: number,
   offset: number,
-  padding: number | null,
+  padding: Padding,
   metadata: {
     timeScale: TimeScale,
   }
@@ -80,7 +81,7 @@ export const xppsOffset = (blockRevision: number, data: Buffer): Response => {
     syncAge: data.readUIntLE(SYNC_AGE_INDEX, SYNC_AGE_LENGTH),
     timeScale: data.readUIntLE(TIME_SCALE_INDEX, TIME_SCALE_LENGTH),
     offset: data.readFloatLE(OFFSET_INDEX),
-    padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
+    padding: getPadding(data, PADDING_INDEX, PADDING_LENGTH),
     metadata: {}
   } as xPPSOffset
   body.metadata.timeScale = getTimeScale(body.timeScale)

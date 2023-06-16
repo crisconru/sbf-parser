@@ -1,6 +1,6 @@
 import { BYTES_LENGTH } from "../../../shared/constants"
-import { SBFBodyData } from "../../../shared/types"
-import { bitState } from "../../../shared/utils"
+import { Padding, SBFBodyData } from "../../../shared/types"
+import { bitState, getPadding } from "../../../shared/utils"
 /* ReceiverTime -> Number: 5914 => "OnChange" interval: 1 second
   The ReceiverTime block provides the current time with a 1-second resolution 
   in the receiver time scale and UTC.
@@ -104,7 +104,7 @@ export type ReceiverTime = {
   utcSec: number | null,
   deltaLS: number | null,
   syncLevel: number,
-  padding: number | null,
+  padding: Padding,
   metadata: {
     syncLeveL: SyncLevel,
   }
@@ -126,7 +126,7 @@ export const receiverTime = (blockRevision: number, data: Buffer): Response => {
     utcSec:   getTimeData(data.readIntLE(UTC_SEC_INDEX, UTC_SEC_LENGTH)),
     deltaLS:  getTimeData(data.readIntLE(DELTA_LS_INDEX, DELTA_LS_LENGTH)),
     syncLevel: data.readUIntLE(SYNC_LEVEL_INDEX, SYNC_LEVEL_LENGTH),
-    padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
+    padding: getPadding(data, PADDING_INDEX, PADDING_LENGTH),
     metadata: {}
   } as ReceiverTime
   body.metadata.syncLeveL = getSyncLevel(body.syncLevel)

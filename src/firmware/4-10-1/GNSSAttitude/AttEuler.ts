@@ -1,6 +1,6 @@
 import { BYTES_LENGTH } from "../../../shared/constants"
-import { SBFBodyData } from "../../../shared/types"
-import { bitState } from "../../../shared/utils"
+import { Padding, SBFBodyData } from "../../../shared/types"
+import { bitState, getPadding } from "../../../shared/utils"
 /* AttEuler -> Number: 5938 => "OnChange" interval: default PVT output rate
   The AttEuler block contains the Euler angles (pitch, roll and heading)
   at the time speciﬁed in the TOW and WNc ﬁelds (in the receiver time frame).
@@ -147,7 +147,7 @@ export type AttEuler = {
   pitchDot: number | null,
   rollDot: number | null,
   headingDot: number | null,
-  padding: number | null,
+  padding: Padding,
   metadata: AttEulerMetadata
 }
 
@@ -169,7 +169,7 @@ export const attEuler = (blockRevision: number, data: Buffer): Response => {
     pitchDot: getData(data.readFloatLE(PITCH_DOT_INDEX)),
     rollDot: getData(data.readFloatLE(ROLL_DOT_INDEX)),
     headingDot: getData(data.readFloatLE(HEADING_DOT_INDEX)),
-    padding: (PADDING_LENGTH > 0) ? data.readUIntLE(PADDING_INDEX, PADDING_LENGTH): null,
+    padding: getPadding(data, PADDING_INDEX, PADDING_LENGTH),
     metadata: {}
   } as AttEuler
   body.metadata.error = getError(body.error)
