@@ -3,12 +3,13 @@ import { dop } from "./DOP"
 import { endOfPVT } from "./EndOfPVT"
 import { ptvSupport } from "./PVTSupport"
 import { ptvSupportA } from "./PVTSupportA"
+import { pvtGeodetic } from "./PVTGeodetic"
 
 const blocks: SBFBodyDataMap = new Map()
 // 4006 - PVTCartesian
 // blocks.set(4006, pvtCartesian)
 // 4007 - PVTGeodetic
-// blocks.set(4007, pvtGeodetic)
+blocks.set(4007, pvtGeodetic)
 // 5905 - PosCovCartesian
 // blocks.set(5905, posCovCartesian)
 // 5906 - PosCovGeodetic

@@ -1,6 +1,7 @@
 import { UNKNOWN_SBF_BODY_DATA } from "../../shared/constants"
 import { SBFBodyData, SBFBodyDataMap, SBFBodyDataParser } from "../../shared/types"
 import { blocks as GNSSAttitude } from "./GNSSAttitude"
+import { blocks as GNSSPositionVelocityTime } from "./GNSSPositionVelocityTime"
 import { blocks as ReceiverTime } from "./ReceiverTime"
 // Blocks
 // Measurement
@@ -11,7 +12,7 @@ import { blocks as ReceiverTime } from "./ReceiverTime"
 // BeiDou Decoded
 // QZSS Decoded
 // SBAS L1 Decoded
-// Position, Velocity and Time
+// GNSS Position, Velocity and Time
 // GNSS Attitude
 // Receiver Time
 // External Event
@@ -20,6 +21,7 @@ import { blocks as ReceiverTime } from "./ReceiverTime"
 // Status
 // Miscellaneous
 const blocks: SBFBodyDataMap = new Map([
+  ...GNSSPositionVelocityTime,
   ...GNSSAttitude,
   ...ReceiverTime,
 ])
