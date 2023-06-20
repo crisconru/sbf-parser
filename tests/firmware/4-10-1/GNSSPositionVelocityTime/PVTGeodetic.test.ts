@@ -575,6 +575,79 @@ describe('Testing PVTGeodetic Revision 1', () => {
     // expect(body).toStrictEqual(input)
     expect(body).toMatchObject(input)
   })
+
+  test('PPPInfo field', () => {
+    const input = structuredClone(defaultInputRev1)
+    input.pppInfo = 0b0000_0000_0000_1000
+    input.metadata = {
+      ...input.metadata,
+      pppInfo: {
+        ageLastSeed: 0b0000_0000_1000,
+        reserved: false,
+        lastSeed: 'NOT_SEEDED'
+      }
+    }
+    const { data: data1 } = getNameFrameDataRev1(input)
+    const { body: body1 } = pvtGeodetic(revision, data1) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body1).toStrictEqual(input)
+    expect(body1).toMatchObject(input)
+
+    input.pppInfo = 0b0010_0000_0000_1000
+    input.metadata = {
+      ...input.metadata,
+      pppInfo: {
+        ageLastSeed: 0b0000_0000_1000,
+        reserved: false,
+        lastSeed: 'MANUAL_SEED'
+      }
+    }
+    const { data: data2 } = getNameFrameDataRev1(input)
+    const { body: body2 } = pvtGeodetic(revision, data2) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body2).toStrictEqual(input)
+    expect(body2).toMatchObject(input)
+
+    input.pppInfo = 0b0100_0000_0000_1000
+    input.metadata = {
+      ...input.metadata,
+      pppInfo: {
+        ageLastSeed: 0b0000_0000_1000,
+        reserved: false,
+        lastSeed: 'DGPS_SEED'
+      }
+    }
+    const { data: data3 } = getNameFrameDataRev1(input)
+    const { body: body3 } = pvtGeodetic(revision, data3) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body3).toStrictEqual(input)
+    expect(body3).toMatchObject(input)
+
+    input.pppInfo = 0b0110_0000_0000_1000
+    input.metadata = {
+      ...input.metadata,
+      pppInfo: {
+        ageLastSeed: 0b0000_0000_1000,
+        reserved: false,
+        lastSeed: 'RTK_FIXED_SEED'
+      }
+    }
+    const { data: data4 } = getNameFrameDataRev1(input)
+    const { body: body4 } = pvtGeodetic(revision, data4) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body4).toStrictEqual(input)
+    expect(body4).toMatchObject(input)
+
+    input.pppInfo = 0b1110_0000_0000_1000
+    input.metadata = {
+      ...input.metadata,
+      pppInfo: {
+        ageLastSeed: 0b0000_0000_1000,
+        reserved: false,
+        lastSeed: 'UNKNOWN'
+      }
+    }
+    const { data: data5 } = getNameFrameDataRev1(input)
+    const { body: body5 } = pvtGeodetic(revision, data5) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body5).toStrictEqual(input)
+    expect(body5).toMatchObject(input)
+  })
 })
 // Revision 2 -----------------------------------------------------------------
 const defaultInputRev2: PVTGeodeticRev2 = {
