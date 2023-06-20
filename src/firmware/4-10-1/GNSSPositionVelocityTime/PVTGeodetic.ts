@@ -43,7 +43,7 @@ import { getGNSSSignal } from "../utils"
                                             Bit    6: Set if the user has entered the command setPVTMode, Static, auto 
                                                       and the receiver is still in the process of determining its ﬁxed position.
                                             Bit 7:    2D/3D ﬂag: set in 2D mode (height assumed constant and not computed).
-  Error        uint8                      PVT error code. The following values are deﬁned:
+  Error           uint8                    PVT error code. The following values are deﬁned:
                                              0: No Error
                                              1: Not enough measurements
                                              2: Not enough ephemerides available

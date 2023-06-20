@@ -103,4 +103,4 @@ export const GNSSSignals: Record<number, GNSSSignal> = {
   35: { signal: 'Reserved' },
 }
 
-export const getGNSSSignal = (num: number): GNSSSignal | null => GNSSSignals[num] ? GNSSSignals[num] : null
+export const getGNSSSignal = (num: number): GNSSSignal | null => GNSSSignals[num] || null

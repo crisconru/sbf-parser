@@ -1,5 +1,8 @@
 import { RandomNumberType, TypeData, TypedData, getTypedData, randomNumber } from '../../../utils'
-import { DO_NOT_USE_FLOAT, DO_NOT_USE_UINT16, DO_NOT_USE_UINT32, DO_NOT_USE_UINT8, MetadataRev0, PVTGeodeticRev0, PVTGeodeticRev1, PVTGeodeticRev2, pvtGeodetic } from '../../../../src/firmware/4-10-1/GNSSPositionVelocityTime/PVTGeodetic'
+import { DO_NOT_USE_FLOAT, DO_NOT_USE_UINT16, DO_NOT_USE_UINT32, DO_NOT_USE_UINT8, Datum, ErrorPVT, MetadataRev0, PVTGeodeticRev0, PVTGeodeticRev1, PVTGeodeticRev2, PVTSolution, RAIMIntegrityFlag, SignalInfo, TimeSystem, pvtGeodetic } from '../../../../src/firmware/4-10-1/GNSSPositionVelocityTime/PVTGeodetic'
+import { bitState } from '../../../../src/shared/utils'
+import { GNSSSignal } from '../../../../src/firmware/4-10-1/types'
+import { getGNSSSignal } from '../../../../src/firmware/4-10-1/utils'
 /* PVTGeodetic -> Number: 4007 => "OnChange" interval: default PVT output rate
   This block contains the GNSS-based position, velocity and time (PVT) solution 
   at the timespeciﬁed in the TOW and WNc ﬁelds. The time of applicability is 
@@ -417,6 +420,176 @@ describe('Testing PVTGeodetic Revision 0', () => {
 
     // expect(body).toStrictEqual(input)
     expect(body).toMatchObject(input)
+  })
+
+  test('Mode field', () => {
+    const input = structuredClone(defaultInputRev0)
+    const START = 0b0000_0000
+    const END = 0b0000_1111
+    for (let i = START; i <= END; i++) {
+      input.mode = i
+      input.metadata = {
+        ...input.metadata,
+        mode: {
+          pvtSolution: (i < 13 && i !== 9 && i !== 11) ? PVTSolution[i] : 'UNKNOWN',
+          reserved45: 0b00,
+          determiningPosition: false,
+          flag2D3D: false
+        }
+      }
+      const { data } = getNameFrameDataRev0(input)
+      const { body } = pvtGeodetic(revision, data) as { name: string, body: PVTGeodeticRev0 }
+      // expect(body).toStrictEqual(input)
+      expect(body).toMatchObject(input)
+    }
+  })
+
+  test('Error field', () => {
+    const input = structuredClone(defaultInputRev0)
+    const START = 0b0000_0000
+    const END = 0b1111_1111
+    for (let i = START; i <= END; i++) {
+      input.error = i
+      input.metadata = {
+        ...input.metadata,
+        error: (i < 11) ? ErrorPVT[i] : 'UNKNOWN',
+      }
+      const { data } = getNameFrameDataRev0(input)
+      const { body } = pvtGeodetic(revision, data) as { name: string, body: PVTGeodeticRev0 }
+      // expect(body).toStrictEqual(input)
+      expect(body).toMatchObject(input)
+    }
+  })
+
+  test('TimeSystem field', () => {
+    const input = structuredClone(defaultInputRev0)
+    const START = 0b0000_0000
+    const END = 0b1111_1111
+    for (let i = START; i <= END; i++) {
+      input.timeSystem = i
+      input.metadata = {
+        ...input.metadata,
+        timesytem: (i < 6 && i !== 2) ? TimeSystem[i] : 'UNKNOWN'
+      }
+      const { data } = getNameFrameDataRev0(input)
+      const { body } = pvtGeodetic(revision, data) as { name: string, body: PVTGeodeticRev0 }
+      if (i === END) {
+        input.timeSystem = null
+        input.metadata.timesytem = null
+      }
+      // expect(body).toStrictEqual(input)
+      expect(body).toMatchObject(input)
+    }
+  })
+
+  test('Datum field', () => {
+    const input = structuredClone(defaultInputRev0)
+    const START = 0b0000_0000
+    const END = 0b1111_1111
+    for (let i = START; i <= END; i++) {
+      input.datum = i
+      input.metadata = {
+        ...input.metadata,
+        datum: ([0, 19, 30, 31, 32, 33, 34, 35, 250, 251].includes(i)) ? Datum[i] : 'UNKNOWN'
+      }
+      const { data } = getNameFrameDataRev0(input)
+      const { body } = pvtGeodetic(revision, data) as { name: string, body: PVTGeodeticRev0 }
+      if (i === END) {
+        input.datum = null
+        input.metadata.datum = null
+      }
+      // expect(body).toStrictEqual(input)
+      expect(body).toMatchObject(input)
+    }
+  })
+
+  test('WACorrInfo field', () => {
+    const input = structuredClone(defaultInputRev0)
+    const START = 0b0000_0000
+    const END = 0b1111_1111
+    for (let i = START; i <= END; i++) {
+      input.waCorrInfo = i
+      input.metadata = {
+        ...input.metadata,
+        waCorrInfo: {
+          clockCorrection: bitState(i, 0),
+          rangeCorrection: bitState(i, 1),
+          ionosphericInformation: bitState(i, 2),
+          orbitAccuracy: bitState(i, 3),
+          DO229: bitState(i, 4),
+          reserved: (i & 0b1110_0000) >>> 5,
+        }
+      }
+      const { data } = getNameFrameDataRev0(input)
+      const { body } = pvtGeodetic(revision, data) as { name: string, body: PVTGeodeticRev0 }
+      if (i === START) {
+        input.waCorrInfo = null
+        input.metadata.waCorrInfo = null
+      }
+      // expect(body).toStrictEqual(input)
+      expect(body).toMatchObject(input)
+    }
+  })
+
+  test('SignalInfo field', () => {
+    const getSignalInfo = (signalInfo: number): SignalInfo => {
+      const response: Record<number, GNSSSignal> = {}
+      for (let bit = 0; bit < 32; bit++){
+        if (bitState(signalInfo, bit)) {
+          const signal = getGNSSSignal(bit)
+          if (signal !== null) {
+            response[bit] = signal
+          }
+        }
+      }
+      return response
+    }
+
+    const input = structuredClone(defaultInputRev0)
+    const START = 0b0000_0000_0000_0000_0000_0000_0000_0000
+    const END = 0b0000_0000_0000_0000_0000_0000_0010_1000 // 40
+    for (let i = START; i <= END; i++) {
+      input.signalInfo = i
+      input.metadata = {
+        ...input.metadata,
+        signalInfo: (i !== START) ? getSignalInfo(i) : null
+      }
+      const { data } = getNameFrameDataRev0(input)
+      const { body } = pvtGeodetic(revision, data) as { name: string, body: PVTGeodeticRev0 }
+      if (i === START) {
+        input.signalInfo = null
+        input.metadata.signalInfo = null
+      }
+      // expect(body).toStrictEqual(input)
+      expect(body).toMatchObject(input)
+    }
+  })
+
+  test('AlertFlag field', () => {
+    const input = structuredClone(defaultInputRev0)
+    const START = 0b0000_0000
+    const END = 0b1111_1111
+    for (let i = START; i <= END; i++) {
+      input.alertFlag = i
+      input.metadata = {
+        ...input.metadata,
+        alertFlag: {
+          raimIntegrityFlag: RAIMIntegrityFlag[i & 0b0000_0011],
+          galileoIntegrityFailed: bitState(i, 2),
+          galileoIonosphericStorm: bitState(i, 3),
+          reserved4: bitState(i, 4),
+          reserved57: (i & 0b1110_0000) >>> 5,
+        }
+      }
+      const { data } = getNameFrameDataRev0(input)
+      const { body } = pvtGeodetic(revision, data) as { name: string, body: PVTGeodeticRev0 }
+      if (i === START) {
+        input.alertFlag = null
+        input.metadata.alertFlag = null
+      }
+      // expect(body).toStrictEqual(input)
+      expect(body).toMatchObject(input)
+    }
   })
 })
 // Revision 1 -----------------------------------------------------------------
