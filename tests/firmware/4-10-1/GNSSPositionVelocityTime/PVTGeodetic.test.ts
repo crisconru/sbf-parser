@@ -751,5 +751,46 @@ describe('Testing PVTGeodetic Revision 2', () => {
     // expect(body).toStrictEqual(input)
     expect(body).toMatchObject(input)
   })
+
+  test('Misc field', () => {
+    const input = structuredClone(defaultInputRev2)
+    input.misc = 0b0000_0000
+    input.metadata = {
+      ...input.metadata,
+      misc: {
+        baselinePointingBasestationARP: false,
+        phaseCenterOffsetCompensated: false,
+        propietary2: false,
+        propietary3: false,
+        propietary45: 0b00,
+        arpPosition: 'Unknown'
+      }
+    }
+    const { data: data1 } = getNameFrameDataRev2(input)
+    const { body: body1 } = pvtGeodetic(revision, data1) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body).toStrictEqual(input)
+    expect(body1).toMatchObject(input)
+
+    input.misc = 0b0100_0000
+    input.metadata.misc.arpPosition = 'ARP-to-marker offset is zero'
+    const { data: data2 } = getNameFrameDataRev2(input)
+    const { body: body2 } = pvtGeodetic(revision, data2) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body).toStrictEqual(input)
+    expect(body2).toMatchObject(input)
+
+    input.misc = 0b1000_0000
+    input.metadata.misc.arpPosition = 'ARP-to-marker offset is not zero'
+    const { data: data3 } = getNameFrameDataRev2(input)
+    const { body: body3 } = pvtGeodetic(revision, data3) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body).toStrictEqual(input)
+    expect(body3).toMatchObject(input)
+
+    input.misc = 0b1100_0000
+    input.metadata.misc.arpPosition = 'UNKNOWN'
+    const { data: data4 } = getNameFrameDataRev2(input)
+    const { body: body4 } = pvtGeodetic(revision, data4) as { name: string, body: PVTGeodeticRev2 }
+    // expect(body).toStrictEqual(input)
+    expect(body4).toMatchObject(input)
+  })
 })
 
