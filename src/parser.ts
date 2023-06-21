@@ -9,11 +9,12 @@ import {
   LENGTH_INDEX,
   LENGTH_LENGTH,
   MINIMAL_FRAME_LENGTH,
-  SYNC_FLAG_BUFFER, TIME_LENGTH, TOW_INDEX, TOW_LENGTH, TWO_BYTES_MAX, UNKNOWN_SBF_BODY_DATA, WNC_INDEX, WNC_LENGTH
+  SYNC_FLAG_BUFFER, TIME_LENGTH, TOW_INDEX, TOW_LENGTH, TWO_BYTES_MAX, WNC_INDEX, WNC_LENGTH
 } from "./shared/constants"
 import { SBFBodyData, SBFBodyDataParser, SBFFrame, SBFHeader, SBFID, SBFParsingStatus, SBFResponse, SBFTime } from "./shared/types"
 import { computedCRC } from "./shared/utils"
 import { getFirmareParser, getFirmwares, isAvailableFirmware, throwFirmwareError } from "./firmware"
+import { wnTowToGpsTimestamp } from 'gpstime'
 
 export class Parser {
   // Internal Buffer
@@ -198,18 +199,21 @@ export class Parser {
     // 14-.. bytes -> Body
     const tow = data.readUIntLE(TOW_INDEX, TOW_LENGTH)
     const wnc = data.readUIntLE(WNC_INDEX, WNC_LENGTH)
-    return {
+    const time: SBFTime = {
       tow: (tow !== DO_NOT_USE_TOW) ? tow : null,
-      wnc: (wnc !== DO_NOT_USE_WNC) ? wnc : null
+      wnc: (wnc !== DO_NOT_USE_WNC) ? wnc : null,
+      timestamp: null,
+      date: null
     }
+    if (time.tow !== null && time.wnc !== null) {
+      const date = wnTowToGpsTimestamp(wnc, tow)
+      time.timestamp = date.getTime()
+      time.date = date.toISOString()
+    }
+    return time
   }
 
   protected getBodyData(blockNumber: number, blockRevision: number, payload: Buffer): SBFBodyData {
-    // const sbfBodyData = {} as SBFBodyData
-    // const { name, body } = this._parser(blockNumber, blockRevision, payload)
-    // sbfBodyData.name = name
-    // sbfBodyData.body = body
-    // return sbfBodyData
     return this._parser(blockNumber, blockRevision, payload)
   }
 

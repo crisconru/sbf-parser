@@ -15,10 +15,8 @@ export type SBFHeader = {
 export interface SBFTime {
   tow: number | null,
   wnc: number | null,
-}
-
-export interface SBFTimeStamp extends SBFTime {
-  timestamp?: number | null
+  timestamp?: number | null,
+  date?: string | null
 }
 
 export type SBFBody = object | null
