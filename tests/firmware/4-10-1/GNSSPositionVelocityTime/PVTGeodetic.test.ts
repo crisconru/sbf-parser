@@ -1,5 +1,5 @@
 import { RandomNumberType, TypeData, TypedData, getTypedData, randomNumber } from '../../../utils'
-import { DO_NOT_USE_FLOAT, DO_NOT_USE_UINT16, DO_NOT_USE_UINT32, DO_NOT_USE_UINT8, Datum, ErrorPVT, MetadataRev0, PVTGeodeticRev0, PVTGeodeticRev1, PVTGeodeticRev2, PVTSolution, RAIMIntegrityFlag, SignalInfo, TimeSystem, pvtGeodetic } from '../../../../src/firmware/4-10-1/GNSSPositionVelocityTime/PVTGeodetic'
+import { DO_NOT_USE_FLOAT, DO_NOT_USE_UINT16, DO_NOT_USE_UINT32, DO_NOT_USE_UINT8, Datum, ErrorPVT, PVTGeodeticRev0, PVTGeodeticRev1, PVTGeodeticRev2, PVTSolution, RAIMIntegrityFlag, SignalInfo, TimeSystem, pvtGeodetic } from '../../../../src/firmware/4-10-1/GNSSPositionVelocityTime/PVTGeodetic'
 import { bitState } from '../../../../src/shared/utils'
 import { GNSSSignal } from '../../../../src/firmware/4-10-1/types'
 import { getGNSSSignal } from '../../../../src/firmware/4-10-1/utils'
