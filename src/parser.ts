@@ -11,12 +11,12 @@ import {
   MINIMAL_FRAME_LENGTH,
   SYNC_FLAG_BUFFER, TIME_LENGTH, TOW_INDEX, TOW_LENGTH, TWO_BYTES_MAX, WNC_INDEX, WNC_LENGTH
 } from "./shared/constants"
-import { SBFBodyData, SBFBodyDataParser, SBFFrame, SBFHeader, SBFID, SBFParsingStatus, SBFResponse, SBFTime } from "./shared/types"
+import { Firmware, SBFBodyData, SBFBodyDataParser, SBFFrame, SBFHeader, SBFID, SBFParser, SBFParsingStatus, SBFResponse, SBFTime } from "./shared/types"
 import { computedCRC } from "./shared/utils"
 import { getFirmareParser, getFirmwares, isAvailableFirmware, throwFirmwareError } from "./firmware"
 import { wnTowToGpsTimestamp } from 'gpstime'
 
-export class Parser {
+export class Parser implements SBFParser {
   // Internal Buffer
   protected _buffer: Buffer = Buffer.from([])
   get bufferSize() { return this._buffer.length }
@@ -33,10 +33,10 @@ export class Parser {
   // Internal Parsed Frames
   protected _frames: SBFResponse[] = []
   // Firmware
-  protected _firmware: string = '4.10.1'
+  protected _firmware: Firmware = '4.10.1'
   protected _parser: SBFBodyDataParser = getFirmareParser(this._firmware)
   get firmware() { return this._firmware }
-  set firmware(fw: string) {
+  set firmware(fw: Firmware) {
     if (typeof fw !== 'string') throw new Error('firmware has to be a string')
     if (!isAvailableFirmware(fw)) throwFirmwareError(fw)
     this._firmware = fw
@@ -50,21 +50,15 @@ export class Parser {
     this._memory = mem
   }
 
-  constructor(firmware: string = '4.10.1', memory: boolean = false) {
+  constructor(firmware: Firmware = '4.10.1', memory: boolean = false) {
     this.firmware = firmware
     this.memory = memory
   }
 
-  getAvailableFirmwares(): string[] {
+  getAvailableFirmwares(): Firmware[] {
     return getFirmwares()
   }
-
-  getFrames(): SBFResponse[] {
-    const frames = structuredClone(this._frames)
-    this._frames = []
-    return frames
-  }
-
+  
   addData(data: Buffer) {
     // Check input data is Buffer
     if (!Buffer.isBuffer(data)) { throw new Error('data has to be a Buffer') }
@@ -72,6 +66,12 @@ export class Parser {
     this._buffer = (this._memory) ? Buffer.concat([this._buffer, data]) : data
     // Parse data
     this.parseData()
+  }
+
+  getFrames(): SBFResponse[] {
+    const frames = structuredClone(this._frames)
+    this._frames = []
+    return frames
   }
 
   protected parseData() {
@@ -141,8 +141,8 @@ export class Parser {
     const crc = this.getCalculatecCRC(frameBuffer, bodyLength)
     if (crc !== header.crc) {
       console.debug(`getSBFFrame: Invalid CRC - should be ${header.crc} -> get it ${crc}`)
-      // status = SBFParsingStatus.ERROR_CRC
-      // return { status, frame: sbfFrame }
+      status = SBFParsingStatus.ERROR_CRC
+      return { status, frame: sbfFrame }
     }
     // TIME
     const time = this.getTime(frameBuffer)

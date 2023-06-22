@@ -40,7 +40,7 @@ export type SBFResponse = {
   buffer: Buffer,
 }
 
-export enum SBFParsingStatus {
+export const enum SBFParsingStatus {
   OK,
   MISSING_BYTES,
   ERROR_LENGTH,
@@ -50,8 +50,11 @@ export enum SBFParsingStatus {
 export type SBFBodyDataParser = (blockNumber: number, blockRevision: number, data: Buffer) => SBFBodyData
 export type SBFBodyDataBlockParser = (blockRevision: number, data: Buffer) => SBFBodyData
 export type SBFBodyDataMap = Map<number, SBFBodyDataBlockParser>
-// ----------------------------------------------------------------------------
-export type BodyBlock = { name: string, body: object | null } | null
 
+export type Firmware = `${number}.${number}.${number}` | `${number}.${number}` | `${number}`
 
-export type SBFBlock = (body: Buffer, blockRevision?: number) => BodyBlock
+export interface SBFParser {
+  getAvailableFirmwares(): Firmware[]
+  addData(data: Buffer): void,
+  getFrames(): SBFResponse[]
+}
