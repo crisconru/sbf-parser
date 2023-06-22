@@ -59,7 +59,7 @@ const PADDING_INDEX = SYNC_LEVEL_INDEX + SYNC_LEVEL_LENGTH
 const DO_NOT_USE = -128
 const getTimeData = (data: number) => (data !== DO_NOT_USE) ? data : null
 
-export enum Synchronization {
+export const enum Synchronization {
   FULL = 'FULL',
   NOT_FULL = 'NOT_FULL',
   NONE = 'NONE',

@@ -68,7 +68,7 @@ const ROLL_DOT_LENGTH = BYTES_LENGTH.FLOAT
 
 const PADDING_INDEX = ROLL_DOT_INDEX + ROLL_DOT_LENGTH
 
-export enum ErrorCode {
+export const enum ErrorCode {
   NO = 'NO_ERROR',
   MEASUREMENTS = 'NOT_ENOUGH_MEASUREMENTS',
   RESERVED = 'RESERVED',
@@ -105,7 +105,7 @@ const getError = (error: number): Error => {
   }
 }
 
-export enum Mode {
+export const enum Mode {
   NO = 'NO_ATTITUDE',
   HEADING_PICH_FLOAT = 'HEADING_PICH_FLOAT',
   HEADING_PICH_FIXED = 'HEADING_PICH_FIXED',

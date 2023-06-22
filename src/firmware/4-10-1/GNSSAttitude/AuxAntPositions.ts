@@ -73,7 +73,7 @@ const UP_VEL_LENGTH = BYTES_LENGTH.DOUBLE
 
 const PADDING_SUB_INDEX = UP_VEL_INDEX + UP_VEL_LENGTH
 
-export enum Error {
+export const enum Error {
   NO = 'NO_ERROR',
   MEASUREMENTS = 'NOT_ENOUGH_MEASUREMENTS',
   RESERVED = 'RESERVED',
@@ -81,7 +81,7 @@ export enum Error {
 
 }
 
-export enum Ambiguity {
+export const enum Ambiguity {
   FIXED = 'FIXED',
   FLOAT = 'FLOAT',
   UNKNOWN = 'UNKNOWN'

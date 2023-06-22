@@ -38,7 +38,7 @@ const OFFSET_LENGTH = BYTES_LENGTH.FLOAT
 
 const PADDING_INDEX = OFFSET_INDEX + OFFSET_LENGTH
 
-export enum TimeScale {
+export const enum TimeScale {
   GPS = 'GPS',
   UTC = 'UTC',
   RECEIVER = 'Receiver',

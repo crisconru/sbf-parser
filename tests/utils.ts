@@ -3,7 +3,7 @@ export type TypedData = {
   buffer: Buffer
 }
 
-export enum TypeData {
+export const enum TypeData {
   INT8,
   INT16,
   INT32,
@@ -85,7 +85,7 @@ export const getTypedData = (num: number, type: TypeData): TypedData | null => {
   return { number, buffer }
 }
 
-export enum RandomNumberType {
+export const enum RandomNumberType {
   'INT',
   'UINT',
   'FLOAT'
