@@ -1,8 +1,7 @@
-export type Padding = number | null
-
-export type SBFID = {
-  blockNumber: number,
-  blockRevision: number
+export type SBFFrame = {
+  header: SBFHeader,
+  time: SBFTime,
+  body: SBFBody,
 }
 
 export type SBFHeader = {
@@ -10,6 +9,11 @@ export type SBFHeader = {
   crc: number,
   id: SBFID,
   length: number
+}
+
+export type SBFID = {
+  blockNumber: number,
+  blockRevision: number
 }
 
 export interface SBFTime {
@@ -21,16 +25,7 @@ export interface SBFTime {
 
 export type SBFBody = object | null
 
-export interface SBFBodyData {
-  name: string,
-  body: SBFBody
-}
-
-export type SBFFrame = {
-  header: SBFHeader,
-  time: SBFTime,
-  body: SBFBody,
-} 
+export type Padding = number | null
 
 export type SBFResponse = {
   name: string,
@@ -38,6 +33,11 @@ export type SBFResponse = {
   version: number,
   frame: SBFFrame,
   buffer: Buffer,
+}
+
+export interface SBFBodyData {
+  name: string,
+  body: SBFBody
 }
 
 export const enum SBFParsingStatus {
