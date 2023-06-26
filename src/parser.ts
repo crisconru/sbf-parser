@@ -19,7 +19,7 @@ import { wnTowToGpsTimestamp } from 'gpstime'
 export class Parser implements SBFParser {
   // Internal Buffer
   protected _buffer: Buffer = Buffer.from([])
-  get bufferSize() { return this._buffer.length }
+  get bufferSize() { return this._buffer.byteLength }
 
   protected _bufferLimit: number = TWO_BYTES_MAX
   get bufferLimit() { return this._bufferLimit }

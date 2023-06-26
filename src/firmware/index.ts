@@ -23,8 +23,6 @@ const throwFirmwareError = (fw: string): never => {
   const error = `Supported firmwares are -> ${fmws} not ${fw}`
   throw new Error(error)
 }
-
-
 // Export
 export {
   getFirmwares,
