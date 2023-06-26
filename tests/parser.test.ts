@@ -52,7 +52,7 @@ describe('Testing Parser', () => {
     expect(parser.memory).toBe(memory)
     expect(parser.firmware).toBe(firmware)
     // Buffer limit
-    expect(parser.bufferSize).toBe(0)
+    expect(parser.bufferLength).toBe(0)
     expect(parser.bufferLimit).toBe(TWO_BYTES_MAX)
   })
 
@@ -76,7 +76,7 @@ describe('Testing Parser', () => {
     // No Memory
     sbf.memory = false
     sbf.addData(buffer)
-    expect(sbf.bufferSize).toBe(0)
+    expect(sbf.bufferLength).toBe(0)
     frames = sbf.getFrames()
     expect(frames.length).toBe(1)
     expect(frames[0].frame).toMatchObject(frame)
@@ -84,27 +84,27 @@ describe('Testing Parser', () => {
     sbf.addData(firstHalf)
     frames = sbf.getFrames()
     expect(frames.length).toBe(0)
-    expect(sbf.bufferSize).toBe(pivot)
+    expect(sbf.bufferLength).toBe(pivot)
     
     sbf.addData(secondHalf)
-    expect(sbf.bufferSize).toBe(0)
+    expect(sbf.bufferLength).toBe(0)
     frames = sbf.getFrames()
     expect(frames.length).toBe(0)
     
     // Memory
     sbf.memory = true
     sbf.addData(buffer)
-    expect(sbf.bufferSize).toBe(0)
+    expect(sbf.bufferLength).toBe(0)
     frames = sbf.getFrames()
     expect(frames.length).toBe(1)
     
     sbf.addData(firstHalf)
-    expect(sbf.bufferSize).toBe(pivot)
+    expect(sbf.bufferLength).toBe(pivot)
     frames = sbf.getFrames()
     expect(frames.length).toBe(0)
     
     sbf.addData(secondHalf)
-    expect(sbf.bufferSize).toBe(0)
+    expect(sbf.bufferLength).toBe(0)
     frames = sbf.getFrames()
     expect(frames.length).toBe(1)
     expect(frames[0].frame).toMatchObject(frame)
@@ -176,6 +176,6 @@ describe('Testing Parser', () => {
     sbf.addData(firstHalf)
     frames = sbf.getFrames()
     expect(frames.length).toBe(0)
-    expect(sbf.bufferSize).toBe(pivot - 2)
+    expect(sbf.bufferLength).toBe(pivot - 2)
   })
 })
