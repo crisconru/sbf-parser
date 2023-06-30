@@ -4,6 +4,40 @@
 
 > SBF is private binary protocol of Septentrio trademark which uses in its own GNSS devices.
 
+Firmwares and frames implemented:
+
+<details>
+  <summary>4.10.1</summary>
+
+  - [x] GNSS Attitude
+    - [x] AttCovEuler
+    - [x] AttEuler
+    - [x] AuxAntPositions
+    - [x] EndOfAtt
+
+  - [ ] GNSS Position Velocity Time
+    - [ ]  PVTCartesian
+    - [x]  PVTGeodetic - Revision 2
+    - [ ]  PosCovCartesian
+    - [ ]  PosCovGeodetic
+    - [ ]  VelCovCartesian
+    - [ ]  VelCovGeodetic
+    - [x]  DOP
+    - [ ]  PosCart
+    - [ ]  PosLocal
+    - [ ]  PosProjected
+    - [ ]  BaseVectorCart
+    - [ ]  BaseVectorGeod
+    - [x]  PVTSupport
+    - [x]  PVTSupportA
+    - [x]  EndOfPVT
+
+  - [x]  Receiver Time
+    - [x]  Receiver Time
+    - [x]  xPPPSOffset
+
+</details>
+
 ## API
 
 This library has two access points:
