@@ -1,7 +1,7 @@
 {
   "name": "sbf-parser",
   "version": "1.0.0",
-  "description": "SBF is a private binary protocol of Septentrio trademark which uses in its GNSS devices",
+  "description": "sbf-parser is a library to parse SBF data. SBF is a private binary protocol of Septentrio trademark which uses in its GNSS devices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
