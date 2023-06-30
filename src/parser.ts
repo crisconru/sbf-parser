@@ -228,5 +228,4 @@ export class Parser implements SBFParser {
       this._buffer = this._buffer.subarray(-this._bufferLimit)
     }
   }
-
 }

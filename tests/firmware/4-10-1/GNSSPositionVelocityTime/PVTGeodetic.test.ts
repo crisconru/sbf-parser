@@ -1039,4 +1039,3 @@ describe('Testing PVTGeodetic Revision 2', () => {
     expect(body4).toMatchObject(input)
   })
 })
-
